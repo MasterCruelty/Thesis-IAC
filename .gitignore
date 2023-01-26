@@ -1,6 +1,3 @@
-#Ignora terraform.tfvars
-terraform.tfvars
-
 #Ignora la cartella .terraform
 .terraform
 #ignora file provider terraform
