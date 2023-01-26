@@ -10,18 +10,3 @@ variable "resource_group_location" {
   description = "Geographic location of the default resource group"
 }
 
-#Definizione service principal(i valori vanno settati in un file terraform.tfvars)
-variable "aks_service_principal_app_id" {
-  default = ""
-}
-variable "aks_service_principal_client_secret" {
-  default = ""
-}
-
-#Definizione sottoscrizione e tenant id
-variable "subscription_id" {
-  default = ""
-}
-variable "tenant_id" {
-  default = ""
-}
