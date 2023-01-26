@@ -17,3 +17,11 @@ variable "aks_service_principal_app_id" {
 variable "aks_service_principal_client_secret" {
   default = ""
 }
+
+#Definizione sottoscrizione e tenant id
+variable "subscription_id" {
+  default = ""
+}
+variable "tenant_id" {
+  default = ""
+}
