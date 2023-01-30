@@ -20,6 +20,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "autoscale" {
   name                  = "k8sautoscale"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.k8s.id
   vm_size               = "Standard_DS2_v2"
+  enable_auto_scaling   = true
   node_count            = 3
   min_count             = 3
   max_count             = 6
