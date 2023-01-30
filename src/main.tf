@@ -11,13 +11,16 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     max_pods   = 110
   }
   identity {
-	type = "SystemAssigned"
+    type = "SystemAssigned"
   }
 }
 
 #Definizione autoscale Azure
-resource "null_resource" "enable_autoscale" {
-  provisioner "local-exec" {
-    command = "az aks update --name ${azurerm_kubernetes_cluster.k8s.name} --resource-group ${var.resource_group_name} --enable-cluster-autoscaler --min-count=3 --max-count=6"
-  }
+resource "azurerm_kubernetes_cluster_node_pool" "autoscale" {
+  name                  = "k8sautoscale"
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.k8s.id
+  vm_size               = "Standard_DS2_v2"
+  node_count            = 3
+  min_count             = 3
+  max_count             = 6
 }
