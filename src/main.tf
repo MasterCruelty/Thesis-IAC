@@ -15,9 +15,9 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 }
 
+#Definizione autoscale
 resource "null_resource" "enable_autoscale" {
   provisioner "local-exec" {
     command = "az aks update --name ${azurerm_kubernetes_cluster.k8s.name} --resource-group ${var.resource_group_name} --enable-cluster-autoscaler --min-count=3 --max-count=6"
   }
 }
-
