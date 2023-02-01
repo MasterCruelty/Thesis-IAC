@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catnip-deployment
+  labels:
+    app: catnip
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catnip
+  template:
+    metadata:
+      labels:
+        app: catnip
+    spec:
+      containers:
+      - name: catnip
+        image: frankyangdev/catnip
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catnip-service
+spec:
+  selector:
+    app: catnip-deployment
+  type: LoadBalancer
+  ports:
+  - name: catnip-service
+    port: 5000
+    targetPort: 5000
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: catnip-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: catnip-deployment
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
