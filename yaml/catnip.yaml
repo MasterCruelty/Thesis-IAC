@@ -26,7 +26,7 @@ metadata:
   name: catnip-service
 spec:
   selector:
-    app: catnip-deployment
+    app: catnip
   type: LoadBalancer
   ports:
   - name: catnip-service
