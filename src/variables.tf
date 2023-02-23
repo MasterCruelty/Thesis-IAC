@@ -10,3 +10,14 @@ variable "resource_group_location" {
   description = "Geographic location of the default resource group"
 }
 
+#Definizione nome subnet per il cluster Kubernetes
+variable "subnet_name" {
+  default     = "mc-subnet"
+  description = "Name of the subnet"
+}
+
+#Definizione nome della rete virtuale per il cluster Kubernetes
+variable "network_name" {
+  default     = "BU-MT-vnet-TF"
+  description = "Name of the virtual network"
+}
