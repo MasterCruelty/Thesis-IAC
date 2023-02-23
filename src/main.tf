@@ -20,9 +20,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   network_profile {
     network_plugin = "azure"
     network_policy = "azure"
-    service_cidr = "10.0.5.0/24"
-    dns_service_ip = "10.0.5.10"
-    docker_bridge_cidr = "172.17.0.1/16"
   }
   lifecycle {
     create_before_destroy = true
