@@ -19,7 +19,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
   network_profile {
     network_plugin = "azure"
-    network_policy = "azure"
+    service_cidr = "10.2.0.0/16"
   }
   lifecycle {
     create_before_destroy = true
