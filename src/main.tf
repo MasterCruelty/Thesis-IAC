@@ -8,7 +8,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     name                = "agent"
     node_count          = 3
     vm_size             = "Standard_DS2_v2"
-    max_pods            = 110
+    max_pods            = 30
     enable_auto_scaling = true
     min_count           = 3
     max_count           = 6
