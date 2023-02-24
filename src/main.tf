@@ -34,9 +34,11 @@ resource "random_string" "suffix" {
   special = false
 }
 
+#depends_on = [azurerm_kubernetes_cluster.k8s]
 resource "null_resource" "destroy_random_string" {
-  depends_on = [azurerm_kubernetes_cluster.k8s]
-
+  triggers = {
+    cluster_id = azurerm_kubernetes_cluster.k8s.id
+  }
   provisioner "local-exec" {
     command = "terraform destroy -target=random_string.suffix -auto-approve"
   }
