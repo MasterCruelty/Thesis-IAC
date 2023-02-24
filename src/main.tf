@@ -35,7 +35,7 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "*"
-    source_address_prefixes    = ["*"]
+    source_address_prefixes    = ["0.0.0.0/0"]
     destination_address_prefix = data.azurerm_subnet.my_subnet.address_prefix
   }
 }
