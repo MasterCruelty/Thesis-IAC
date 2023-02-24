@@ -34,6 +34,14 @@ resource "random_string" "suffix" {
   special = false
 }
 
+resource "null_resource" "destroy_random_string" {
+  depends_on = [azurerm_kubernetes_cluster.k8s]
+
+  provisioner "local-exec" {
+    command = "terraform destroy -target=random_string.suffix -auto-approve"
+  }
+}
+
 data "azurerm_subnet" "my_subnet" {
   name                 = var.subnet_name
   virtual_network_name = var.network_name
