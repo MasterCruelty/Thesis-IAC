@@ -21,3 +21,7 @@ variable "network_name" {
   default     = "BU-MT-vnet-TF"
   description = "Name of the virtual network"
 }
+
+variable "generate_suffix" {
+  default = true
+}

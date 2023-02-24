@@ -32,9 +32,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 resource "random_string" "suffix" {
   length  = 3
   special = false
-  depends_on [
-    azurerm_kubernetes_cluster.k8s
-  ]
 }
 
 data "azurerm_subnet" "my_subnet" {
