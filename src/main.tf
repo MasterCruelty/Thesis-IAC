@@ -17,25 +17,37 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   identity {
     type = "SystemAssigned"
   }
-  network_profile {
-    network_plugin     = "azure"
-    network_policy     = "azure"
-    service_cidr       = "10.2.0.0/16"
-    docker_bridge_cidr = "172.17.0.1/16"
-    dns_service_ip     = "10.2.0.10"
-  }
   depends_on = [
     random_string.suffix
   ]
 }
 
-resource "random_string" "suffix" {
-  length  = 3
-  special = false
+resource "azurerm_network_security_group" "nsg" {
+  name                = "k8s-iac-nsg"
+  location            = var.resource_group_location
+  resource_group_name = var.resource_group_name
+
+  security_rule {
+    name                       = "k8s-iac-ingress-rule"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefixes    = ["*"]
+    destination_address_prefix = data.azurerm_subnet.my_subnet.address_prefix
+  }
 }
+
 
 data "azurerm_subnet" "my_subnet" {
   name                 = var.subnet_name
   virtual_network_name = var.network_name
   resource_group_name  = var.resource_group_name
+}
+
+resource "random_string" "suffix" {
+  length  = 3
+  special = false
 }
