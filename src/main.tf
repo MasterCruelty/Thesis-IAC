@@ -24,9 +24,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     docker_bridge_cidr = "172.17.0.1/16"
     dns_service_ip     = "10.2.0.10"
   }
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "random_string" "suffix" {
@@ -34,7 +31,6 @@ resource "random_string" "suffix" {
   special = false
 }
 
-#depends_on = [azurerm_kubernetes_cluster.k8s]
 resource "null_resource" "destroy_random_string" {
   triggers = {
     cluster_id = azurerm_kubernetes_cluster.k8s.id
