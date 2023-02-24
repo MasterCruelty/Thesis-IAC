@@ -24,20 +24,17 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     docker_bridge_cidr = "172.17.0.1/16"
     dns_service_ip     = "10.2.0.10"
   }
+  depends_on = [
+    random_string.suffix
+  ]
 }
 
 resource "random_string" "suffix" {
   length  = 3
   special = false
-}
-
-resource "null_resource" "destroy_random_string" {
-  triggers = {
-    cluster_id = azurerm_kubernetes_cluster.k8s.id
-  }
-  provisioner "local-exec" {
-    command = "terraform destroy -target=random_string.suffix -auto-approve"
-  }
+  depends_on [
+    azurerm_kubernetes_cluster.k8s
+  ]
 }
 
 data "azurerm_subnet" "my_subnet" {
