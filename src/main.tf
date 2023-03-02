@@ -10,7 +10,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     vm_size             = "Standard_DS2_v2"
     max_pods            = 30
     enable_auto_scaling = true
-    enable_node_public_ip = true
     min_count           = 3
     max_count           = 6
     #vnet_subnet_id      = data.azurerm_subnet.my_subnet.id
