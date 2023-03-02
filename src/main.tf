@@ -10,6 +10,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     vm_size             = "Standard_DS2_v2"
     max_pods            = 30
     enable_auto_scaling = true
+    enable_node_public_ip = true
     min_count           = 3
     max_count           = 6
     #vnet_subnet_id      = data.azurerm_subnet.my_subnet.id
@@ -21,25 +22,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     random_string.suffix
   ]
 }
-
-resource "azurerm_network_security_group" "nsg" {
-  name                = "k8s-iac-nsg"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
-
-  security_rule {
-    name                       = "k8s-iac-ingress-rule"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefixes    = ["0.0.0.0/0"]
-    destination_address_prefix = data.azurerm_subnet.my_subnet.address_prefix
-  }
-}
-
 
 data "azurerm_subnet" "my_subnet" {
   name                 = var.subnet_name
