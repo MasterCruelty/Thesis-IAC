@@ -16,7 +16,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 
   http_proxy_config {
-    http_proxy = "http://40.118.0.94:8083"
+    http_proxy = "http://40.118.0.94:8083/"
   }
 
   identity {
