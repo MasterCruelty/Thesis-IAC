@@ -2,7 +2,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   name                = "k8s-cluster-iac-${random_string.suffix.result}"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
-  dns_prefix          = "exampleprefix"
+  #dns_prefix          = "exampleprefix"
 
   default_node_pool {
     name                = "agent"
