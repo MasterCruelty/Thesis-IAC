@@ -14,6 +14,11 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     max_count           = 6
     #vnet_subnet_id      = data.azurerm_subnet.my_subnet.id
   }
+
+  http_proxy_config {
+    http_proxy = "http://40.118.0.94:8083"
+  }
+
   identity {
     type = "SystemAssigned"
   }
