@@ -3,7 +3,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   dns_prefix          = "aks-dns"
-  sku_tier            = "Paid"
+  #sku_tier            = "Paid"
 
   default_node_pool {
     name                = "agent"
