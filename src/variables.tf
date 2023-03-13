@@ -6,7 +6,7 @@ variable "resource_group_name" {
 
 #Definizione località geografica del gruppo risorse
 variable "resource_group_location" {
-  default     = "West Europe"
+  default     = "East US"
   description = "Geographic location of the default resource group"
 }
 
