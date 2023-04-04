@@ -7,4 +7,6 @@
 *.toc
 Tesi_sorgente.txt
 Tesi_sorgente.out
-Tesi_sorgente.synctex
+Tesi_sorgente.synctex.gz
+Tesi_sorgente.log
+Tesi_sorgente.pdf
