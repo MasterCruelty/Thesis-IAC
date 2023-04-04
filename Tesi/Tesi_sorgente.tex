@@ -2,18 +2,12 @@
 % Tesi D.S.I. - modello preso da
 % Stanford University PhD thesis style -- modifications to the report style
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                         %
-%			TESI DOTTORATO                                                   %
-%			______________                                                   %
-%                                                                         %
-%			AUTORE: Elena Pagani                                             %
-%                                                                         %
-%			Ultima revisione: 7.X.1998                                       %
-%           correzioni atrent                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %
+\makeatletter
+\let\my@xfloat\@xfloat
+\makeatother
 \documentclass[a4paper,12pt]{report}
 %    \renewcommand{\baselinestretch}{1.6}      % interline spacing
 %
@@ -24,12 +18,21 @@
 \usepackage[a4paper]{geometry}
 \usepackage{amssymb,amsmath,amsthm}
 \usepackage{graphicx}
+\graphicspath{{./img/}}
 \usepackage{url}
 \usepackage{hyperref}
 \usepackage{epsfig}
 \usepackage[italian]{babel}
 \usepackage{setspace}
 \usepackage{tesi}
+\makeatletter
+\def\@xfloat#1[#2]{
+	\my@xfloat#1[#2]%
+	\def\baselinestretch{1}%
+	\@normalsize \normalsize
+}
+\makeatother
+
 
 % per le accentate
 \usepackage[utf8]{inputenc}
@@ -42,8 +45,10 @@
 %			TITOLO
 %
 \begin{document}
+\begin{center}
 \includegraphics[width=\textwidth]{Logo.jpg}
 \title{Realizzazione di una soluzione IAC (Infrastructure As Code) che consenta il rilascio di un'infrastruttura per ambiti DevOps}
+\end{center}
 \author{\textbf{Roberto Antoniello}}
 \dept{Corso di Laurea in Informatica} 
 \anno{2022-2023}
@@ -70,8 +75,17 @@ Gli obiettivi principali prefissati per questo progetto di tirocinio sono stati 
 \end{enumerate}
 \subsection{Dal metodo tradizionale all'approccio DevOps}
 DevOps è una metodologia che punta a ridurre in modo considerevole i tempi di rilascio di nuovo software incorporando nello stesso di team di sviluppo le competenze necessarie per costruire l'infrastruttura adatta al rilascio del software grazie ai concetti di container, microservizi e cloud computing.\\
-Mentre con lo sviluppo tradizionale il processo di sviluppo poteva concludersi con una frequenza che poteva anche arrivare a 1 mese, con questa strategia possiamo rilasciare modifiche del software in modo continuativo e automatico nell'arco di 1 ora o anche meno.
+Tradizionalmente il processo di rilascio avveniva più lentamente nell'arco di mesi. Il team di sviluppo doveva coordinarsi con gli altri team per le diverse fasi dello sviluppo. Oggi invece con lo sviluppo DevOps si possono eseguire tutte le fasi senza dover aspettare un team separato, garantendo che il tempo di rilascio delle modifiche del software possa avvenire con frequenza oraria o anche meno, oltre ad essere continuativo e automatico.\\
+Un'ulteriore progresso in questo tipo di approcci è il DevSecOps, una strategia che va a integrare anche la sicurezza e il testing nel CI(Continuous Integration) e CD(Continuous Deployment). \\La difficoltà che sorge nel DevSecOps è la risoluzione dei problemi legati alla sicurezza internamente al team di sviluppo, poichè gli sviluppatori devono prima acquisire le competenze necessarie per risolvere questo tipo di problemi.
+\subsection{Ciclo di vita dell'infrastruttura}
+Si intende in tal senso che l'obiettivo specifico fosse di comprendere l'intero ciclo a partire dall'analisi dei requisiti fino ad arrivare alla progettazione e implementazione finale del sistema.
 \section{Tecnologie utilizzate}
+\begin{figure}[h]
+	\includegraphics[width=0.6\textwidth]{tech_used}
+    \caption{The DevOps infinity loop(ogni tecnologia utilizzata nel proprio settore) \cite{devopsloop}}
+    \label{fig:tech_used}
+\end{figure}
+
 \section{Fasi principali svolte}
 
 \chapter{Studio delle tecnologie coinvolte e analisi dei requisiti}
@@ -105,6 +119,8 @@ Mentre con lo sviluppo tradizionale il processo di sviluppo poteva concludersi c
 %
 \begin{thebibliography}{00}
 %
+\bibitem{devopsloop}
+TechTarget, Demystify the DevOps process, step by step, 2023.  \url{https://www.techtarget.com/searchitoperations/tip/Demystify-the-DevOps-process-step-by-step}
 %\bibitem{gotti91}
 %M. Gotti, I linguaggi specialistici, Firenze, La Nuova %Italia, 1991.
 %
