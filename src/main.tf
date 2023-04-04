@@ -1,3 +1,4 @@
+#Definizione della risorsa di tipo cluster Kubernetes
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                = "k8s-cluster-iac-${random_string.suffix.result}"
   location            = var.resource_group_location
@@ -24,12 +25,14 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   ]
 }
 
+#Definizione della subnet e rete virtuale entro cui collocare il cluster Kubernetes
 data "azurerm_subnet" "my_subnet" {
   name                 = var.subnet_name
   virtual_network_name = var.network_name
   resource_group_name  = var.resource_group_name
 }
 
+#risorsa di tipo stringa per generare il suffisso di 3 caratteri casuali sul nome della risorsa
 resource "random_string" "suffix" {
   length  = 3
   special = false
