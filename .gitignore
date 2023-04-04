@@ -2,3 +2,9 @@
 .terraform
 #ignora file provider terraform
 .terraform.*
+#ignora file ausiliari latex
+*.aux
+*.toc
+Tesi_sorgente.txt
+Tesi_sorgente.out
+Tesi_sorgente.synctex
