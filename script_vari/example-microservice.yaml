@@ -21,7 +21,7 @@ spec:
       - name: regcred
       containers:
       - name: user
-        image: mastercruelty/docker-hosted:interview_user
+        image: <inserire campo immagine>
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -57,17 +57,3 @@ spec:
   - name: user-service
     port: 8080
     targetPort: 8080
----
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: user-autoscaler
-  namespace: interview-tool
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: user-deployment
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 50
