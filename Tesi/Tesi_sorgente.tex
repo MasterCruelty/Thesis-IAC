@@ -64,14 +64,17 @@
 % 
 \chapter{Introduzione}
 \section{IAC: definizione e vantaggi}
-La metodologia IAC(Infrastructure As Code), in italiano "infrastruttura come codice", è una strategia che punta a gestire l'intero ciclo di vita di un'infrastruttura mediante codice senza ulteriore ausilio di altri strumenti. \\ In questo modo è molto più semplice e rapido modificare o eseguire miglioramenti al sistema senza dover ripensare completamente la struttura o stravolgerne le componenti.
-Come vedremo nei successivi paragrafi, la potenza di alcune delle tecnologie trattate lungo lo sviluppo di questo progetto risiede proprio nel fatto di poter essere gestite direttamente tramite codice.
+La metodologia IAC(Infrastructure As Code), in italiano "infrastruttura come codice", è una strategia che punta a gestire l'intero ciclo di vita di un'infrastruttura mediante codice. Quindi non c'è bisogno di configurazione hardware fisica o strumenti interattivi esterni, è sufficiente uno o più linguaggi dichiarativi o di scripting e compilare correttamente dei file di definizione.\cite{iacdef} \\ 
+In questo modo è molto più semplice e rapido modificare o eseguire miglioramenti al sistema senza dover ripensare completamente la struttura o stravolgerne le componenti. \\
+Come vedremo nei successivi paragrafi, la potenza di alcune delle tecnologie trattate lungo lo sviluppo di questo progetto risiede proprio nel fatto di poter essere gestite direttamente tramite codice.\\
+In questo capitolo introduttivo saranno descritti gli obiettivi prefissati per questo progetto, le fasi principali che sono state svolte e una breve descrizione delle tecnologie utilizzate. \\
+In questo modo sarà più immediato richiamare alcuni concetti che useremo nei capitoli successivi.
 \section{Obiettivi del progetto}
-Gli obiettivi principali prefissati per questo progetto di tirocinio sono stati 3:
+Gli obiettivi principali prefissati per questo progetto di tirocinio sono stati i seguenti:
 \begin{enumerate}
-\item Acquisire competenze in ambito DevOps.
-\item Acquisire conoscenze sul ciclo di vita di un'infrastruttura.
-\item Costruire un'infrastruttura in grado di essere rilasciata attraverso il cloud e sulla quale fosse possibile rilasciare applicazioni basate su microservizi.
+\item \textit{Acquisire competenze in ambito DevOps.}
+\item \textit{Acquisire conoscenze sul ciclo di vita di un'infrastruttura.}
+\item \textit{Costruire un'infrastruttura in grado di essere rilasciata attraverso il cloud e sulla quale fosse possibile rilasciare applicazioni basate su microservizi.}
 \end{enumerate}
 \subsection{Dal metodo tradizionale all'approccio DevOps}
 DevOps è una metodologia che punta a ridurre in modo considerevole i tempi di rilascio di nuovo software incorporando nello stesso di team di sviluppo le competenze necessarie per costruire l'infrastruttura adatta al rilascio del software grazie ai concetti di container, microservizi e cloud computing.\\
@@ -79,6 +82,15 @@ Tradizionalmente il processo di rilascio avveniva più lentamente nell'arco di m
 Un'ulteriore progresso in questo tipo di approcci è il DevSecOps, una strategia che va a integrare anche la sicurezza e il testing nel CI(Continuous Integration) e CD(Continuous Deployment). \\La difficoltà che sorge nel DevSecOps è la risoluzione dei problemi legati alla sicurezza internamente al team di sviluppo, poichè gli sviluppatori devono prima acquisire le competenze necessarie per risolvere questo tipo di problemi.
 \subsection{Ciclo di vita dell'infrastruttura}
 Si intende in tal senso che l'obiettivo specifico fosse di comprendere l'intero ciclo a partire dall'analisi dei requisiti fino ad arrivare alla progettazione e implementazione finale del sistema.
+\section{Fasi principali svolte}
+Le principali fasi svolte durante il progetto di tirocinio sono state le seguenti:
+\begin{enumerate}
+\item \textit{Studio delle tecnologie coinvolte.} \\
+Durante questa fase sono state approcciate diverse tecnologie per la prima volta. Vi è stato un primo apprendimento teorico dei concetti che ruotavano attorno al funzionamento di questi strumenti, mentre successivamente tali concetti sono stati applicati in maniera pratica eseguendo diversi test.
+\item \textit{Progettazione dell'infrastruttura.}
+\item \textit{Implementazione del sistema.}
+\end{enumerate}
+
 \section{Tecnologie utilizzate}
 \begin{figure}[h]
 	\includegraphics[width=0.6\textwidth]{tech_used}
@@ -86,7 +98,6 @@ Si intende in tal senso che l'obiettivo specifico fosse di comprendere l'intero 
     \label{fig:tech_used}
 \end{figure}
 
-\section{Fasi principali svolte}
 
 \chapter{Studio delle tecnologie coinvolte e analisi dei requisiti}
 \section{Tecnologie}
@@ -119,10 +130,11 @@ Si intende in tal senso che l'obiettivo specifico fosse di comprendere l'intero 
 %
 \begin{thebibliography}{00}
 %
+\bibitem{iacdef}
+Wikipedia, Infrastructure As Code. \url{https://it.wikipedia.org/wiki/Infrastructure_as_Code}
 \bibitem{devopsloop}
 TechTarget, Demystify the DevOps process, step by step, 2023.  \url{https://www.techtarget.com/searchitoperations/tip/Demystify-the-DevOps-process-step-by-step}
-%\bibitem{gotti91}
-%M. Gotti, I linguaggi specialistici, Firenze, La Nuova %Italia, 1991.
+
 %
 %
 \end{thebibliography}
