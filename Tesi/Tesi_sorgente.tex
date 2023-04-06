@@ -134,7 +134,7 @@ In questa figura è possibile osservare l'elenco delle tecnologie utilizzate, og
 Questo ciclo parte dalla stesura del codice fino ad arrivare al suo monitoraggio per poi ricominciare da capo senza mai concludersi.\\
 Per quanto riguarda il versionamento del codice è stato utilizzato \textbf{Git}. \\
 Spostandoci sul lato del deploy notiamo \textbf{Azure} che è il cloud provider scelto durante la fase di studio, \textbf{Terraform} per la vera e propria infrastruttura a livello di codice e \textbf{Docker} per la sua funzionalità nella creazione di container.\\
-La gestione delle risorse è stata eseguita per la maggior parte mediante linea di comando su sistemi basati su \textbf{Linux}. Inoltre \textbf{Kubernetes} è uno strumento che potremo considerare come il "controller" di tutto il sistema costruito durante il progetto.\\
+Potremo invece considerare \textbf{Kubernetes}  come il "controller" di tutto il sistema costruito durante il progetto.\\
 Infine per la parte di build e release è stato utilizzato \textbf{Jenkins} per tutto ciò che riguarda il continuo rilascio in maniera automatica.\\
 \textit{Nel prossimo capitolo andremo ad approfondire meglio i concetti principali di queste tecnologie e come sono state utilizzate nel contesto del progetto.}
 
@@ -143,10 +143,6 @@ Infine per la parte di build e release è stato utilizzato \textbf{Jenkins} per 
 \chapter{Fase di studio e analisi dei requisiti}
 \section{Tecnologie}
 Come anticipato, in questa sezione si parlerà più nel dettaglio delle tecnologie già menzionate e più nel dettaglio della fase di studio.
-\subsection{Linux}
-La linea di comando a bordo dei sistemi basati su Linux è uno strumento molto potente in ogni ambito informatico, consentendo così di accedere a informazioni o di elaborarle in modo rapido ed efficiente rispetto all'uso di un'eventuale interfaccia grafica.\\
-Nel contesto del progetto la linea di comando è stata utilizzata fin dall'inizio nella fase di studio per familiarizzare con le diverse CLI(command-line interface) delle tecnologie utilizzate. \\
-Nonostante il background accademico e personale sull'utilizzo di questo strumento, tale conoscenza è stata approfondita e migliorata durante l'intero sviluppo.\\
 \subsection{Docker}
 Docker è un software progettato per permettere di eseguire applicazioni in ambienti isolati minimali e facilmente distribuibili, anche detti container. \cite{docker} \\
 Andando più nel dettaglio questi container non sono altro che delle applicazioni "virtualizzate" ma che condividono il kernel del sistema operativo della macchina che li ospita. \\
@@ -161,9 +157,9 @@ Questa tecnologia si pone a un livello d'astrazione più alto rispetto a Docker 
 Nel corso della fase di studio, tra le varie alternative possibili è stato scelto Azure come cloud provider su cui fare affidamento.\\
 I vantaggi di usare il cloud risiedono nel fatto che non è più necessario costruirsi un proprio datacenter privato acquistando hardware e gestendolo privatamente, ma noleggiandolo da società terze sfruttando la rete.\cite{cloud}\\
 L'utilizzo delle macchine è pagato sulla base dell'effettivo consumo e come detto poc'anzi questo fa si che i costi da sostenere siano notevolmente più bassi rispetto all'acquisto, installazione e manutenzione in loco.\\
-Nel contesto del progetto Azure è stato usato principalmente per il suo servizio legato ai cluster Kubernetes. Oltre alla convenienza sul lato economico, un vantaggio in questo caso specifico sta nel ritrovarsi con un cluster già pronto e operativo con un singolo comando dalla CLI di Azure o con pochi click dal portale web.\\
-Alternativamente, se dovessimo fare a meno di questo servizio, saremmo costretti a configurare a mano le diverse macchine per collegarle insieme e formare il cluster.
-\begin{lstlisting}[caption={\\Esempio di comando per creare un cluster Kubernetes come servizio di Azure da Azure CLI.}]
+Nel contesto del progetto Azure è stato usato principalmente per il suo servizio legato ai cluster Kubernetes, chiamato Azure Kubernetes Service o in forma abbreviata AKS. Oltre alla convenienza sul lato economico, un vantaggio in questo caso specifico sta nel ritrovarsi con un cluster già pronto e operativo con un singolo comando dalla CLI di Azure o con pochi click dal portale web.\\
+Alternativamente, se dovessimo fare a meno di questo servizio, saremmo costretti a configurare a mano le diverse macchine per collegarle insieme e formare il cluster. 
+\begin{lstlisting}[caption={\\\textit{Esempio di comando per creare un cluster Kubernetes come servizio di Azure da Azure CLI. Gli argomenti passati sono il gruppo risorse in cui deployare la risorsa di tipo AKS, il nome attribuito al cluster e il numero di nodi desiderati.}}]
 az aks create \
   --resource-group <gruppo-risorse> \
   --name <nome-cluster> \
@@ -171,8 +167,15 @@ az aks create \
 \end{lstlisting}
 
 \subsection{Terraform}
+Si tratta di una tecnologia di automazione dotata di un proprio linguaggio dichiarativo HCL(Hashicorp Configuration Language), con la quale è possibile creare, modificare e eventualmente distruggere risorse descritte nel codice.\\
+Nel contesto del progetto Terraform è stato utilizzato per definire le specifiche del cluster Kubernetes come servizio di Azure. Una volta che è stato definito tramite codice, non è stato più necessario andarlo a creare attraverso Azure stesso, ma semplicemente facendo compilare e applicare il codice.
 \subsection{Jenkins}
+Questo è stato uno strumento fondamentale ai fini del progetto, nonché ponte di collegamento tra tutte le tecnologie introdotte finora. \\
+È un software open source di supporto allo sviluppo che permette facilmente l'integrazione continua e automatica nei rilasci del software.\cite{jenkins}\\
+Jenkins è stato utilizzato in questo progetto per costruire delle cosiddette pipeline, ovvero delle collezioni di eventi che succedono uno dopo l'altro. Andando più nel dettaglio, ogni pipeline prodotta è divisa in diversi blocchi, ognuno dei quali esegue determinate azioni tramite un apposito script in Bash.\\
+Ogni qualvolta viene fatta una modifica, una pipeline specifica viene attivata ed eseguita dall'inizio fino alla fine, il tutto in autonomia e senza bisogno di passi manuali.
 \section{Requisiti}
+
 \subsection{collegamenti tra le tecnologie}
 
 \chapter{Progettazione dell'infrastruttura}
@@ -215,6 +218,8 @@ Wikipedia, Kubernetes. \url{https://it.wikipedia.org/wiki/Kubernetes}
 \bibitem{cloud}
 Ionos.it, I vantaggi del cloud computing. 2023 \url{https://www.ionos.it/digitalguide/server/know-how/i-vantaggi-del-cloud-computing/}
 
+\bibitem{jenkins}
+Wikipedia, Jenkins. \url{https://it.wikipedia.org/wiki/Jenkins_(software)}
 %
 %
 \end{thebibliography}
