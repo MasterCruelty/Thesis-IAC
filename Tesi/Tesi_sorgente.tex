@@ -4,10 +4,11 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%
+%--fix template
 \makeatletter
 \let\my@xfloat\@xfloat
 \makeatother
+%--end fix
 \documentclass[a4paper,12pt]{report}
 %    \renewcommand{\baselinestretch}{1.6}      % interline spacing
 %
@@ -25,6 +26,32 @@
 \usepackage[italian]{babel}
 \usepackage{setspace}
 \usepackage{tesi}
+%--definizione linguaggio
+\usepackage{listings}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Bash,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+%--fine definizione linguaggio
+
+%--fix template
 \makeatletter
 \def\@xfloat#1[#2]{
 	\my@xfloat#1[#2]%
@@ -32,6 +59,8 @@
 	\@normalsize \normalsize
 }
 \makeatother
+%--end fix
+
 
 
 % per le accentate
@@ -123,7 +152,24 @@ Docker è un software progettato per permettere di eseguire applicazioni in ambi
 Andando più nel dettaglio questi container non sono altro che delle applicazioni "virtualizzate" ma che condividono il kernel del sistema operativo della macchina che li ospita. \\
 Nel contesto del progetto Docker è stato usato direttamente solo per il versionamento delle immagini dei microservizi. È stato invece usato in modo implicito e indiretto all'interno di Kubernetes.
 \subsection{Kubernetes}
+Kubernetes, anche chiamata k8s, è una piattaforma open source che automatizza le operazioni sui container. Grazie ad essa vengono eliminati molti dei processi manuali coinvolti nel deploy di applicazioni in container. \\
+Non è più necessario manipolare i container a mano con diversi comandi Docker, ma è sufficiente scrivere un manifesto in codice formato YAML. In questo file vengono definite le specifiche del container e ogni volta che dovrà essere modificato basterà modificare il codice e successivamente applicare di nuovo il file. \\
+È possibile mettere in cluster gruppi di nodi su cui sono in esecuzioni dei container e Kubernetes aiuta a gestirli in modo facile ed efficiente.\\
+Questa tecnologia si pone a un livello d'astrazione più alto rispetto a Docker e i nodi all'interno del cluster contengono già al loro interno un container runtime.\cite{kubernetes}\\ \\
+
 \subsection{Azure}
+Nel corso della fase di studio, tra le varie alternative possibili è stato scelto Azure come cloud provider su cui fare affidamento.\\
+I vantaggi di usare il cloud risiedono nel fatto che non è più necessario costruirsi un proprio datacenter privato acquistando hardware e gestendolo privatamente, ma noleggiandolo da società terze sfruttando la rete.\cite{cloud}\\
+L'utilizzo delle macchine è pagato sulla base dell'effettivo consumo e come detto poc'anzi questo fa si che i costi da sostenere siano notevolmente più bassi rispetto all'acquisto, installazione e manutenzione in loco.\\
+Nel contesto del progetto Azure è stato usato principalmente per il suo servizio legato ai cluster Kubernetes. Oltre alla convenienza sul lato economico, un vantaggio in questo caso specifico sta nel ritrovarsi con un cluster già pronto e operativo con un singolo comando dalla CLI di Azure o con pochi click dal portale web.\\
+Alternativamente, se dovessimo fare a meno di questo servizio, saremmo costretti a configurare a mano le diverse macchine per collegarle insieme e formare il cluster.
+\begin{lstlisting}[caption={\\Esempio di comando per creare un cluster Kubernetes come servizio di Azure da Azure CLI.}]
+az aks create \
+  --resource-group <gruppo-risorse> \
+  --name <nome-cluster> \
+  --node-count <n> \
+\end{lstlisting}
+
 \subsection{Terraform}
 \subsection{Jenkins}
 \section{Requisiti}
@@ -162,6 +208,13 @@ TechTarget, Demystify the DevOps process, step by step, 2023. \url{https://www.t
 
 \bibitem{docker}
 Wikipedia, Docker. \url{https://it.wikipedia.org/wiki/Docker#Orchestrazione}
+
+\bibitem{kubernetes}
+Wikipedia, Kubernetes. \url{https://it.wikipedia.org/wiki/Kubernetes}
+
+\bibitem{cloud}
+Ionos.it, I vantaggi del cloud computing. 2023 \url{https://www.ionos.it/digitalguide/server/know-how/i-vantaggi-del-cloud-computing/}
+
 %
 %
 \end{thebibliography}
