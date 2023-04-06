@@ -175,13 +175,21 @@ Questo è stato uno strumento fondamentale ai fini del progetto, nonché ponte d
 Jenkins è stato utilizzato in questo progetto per costruire delle cosiddette pipeline, ovvero delle collezioni di eventi che succedono uno dopo l'altro. Andando più nel dettaglio, ogni pipeline prodotta è divisa in diversi blocchi, ognuno dei quali esegue determinate azioni tramite un apposito script in Bash.\\
 Ogni qualvolta viene fatta una modifica, una pipeline specifica viene attivata ed eseguita dall'inizio fino alla fine, il tutto in autonomia e senza bisogno di passi manuali.
 \section{Requisiti}
-
+Richiamando in breve i requisiti e analizzandoli, l'infrastruttura finale doveva rispettare le seguenti richieste:\\
+\begin{enumerate}
+\item \textit{Deve essere realizzata tramite una soluzione IAC.}
+\item \textit{Deve essere rilasciata attraverso il cloud.}
+\item \textit{Deve essere in grado di ospitare sopra di essa applicazioni a microservizi.}
+\item \textit{Deve garantire che le modifiche a questi microservizi vengano integrate e deployate in automatico. }
+\end{enumerate}
 \subsection{collegamenti tra le tecnologie}
+
 
 \chapter{Progettazione dell'infrastruttura}
 \section{Casi d'uso}
 \section{Definizione dell'infrastruttura}
 \subsection{Ulteriori dettagli progettuali}
+
 
 \chapter{Implementazione in funzione dei disegni progettuali}
 \section{Codice Terraform e pipeline dedicata}
