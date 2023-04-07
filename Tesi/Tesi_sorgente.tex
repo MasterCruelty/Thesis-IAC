@@ -183,10 +183,23 @@ Richiamando in breve i requisiti e analizzandoli, l'infrastruttura finale doveva
 \item \textit{Deve garantire che le modifiche a questi microservizi vengano integrate e deployate in automatico. }
 \end{enumerate}
 \subsection{collegamenti tra le tecnologie}
-
+Si tratta di una delle parti più complesse svolte durante il tirocinio. Essenzialmente è stato un punto di transizione tra la fase di studio e la fase di progettazione.\\
+Ora che abbiamo introdotto a sufficienza tutti gli strumenti utilizzati, è necessario collegarli tra loro e farli comunicare correttamente, così da completare metaforicamente un grande puzzle.\\
+Ad esempio Terraform, Kubernetes e Azure sono stati collegati tra loro come se fossero un'entità unica. Kubernetes ci fornisce il controllo sui container, Azure un servizio per avere il cluster già pronto e infine Terraform ci permette di creare la risorsa scrivendo solo codice. \\
+La difficoltà principale nel fare ciò è stato capire a fondo che ruolo svolgeva ogni pezzo così da sapere in che modo serviva per far funzionare al meglio il pezzo successivo.
 
 \chapter{Progettazione dell'infrastruttura}
 \section{Casi d'uso}
+
+\begin{figure}[h]
+	\includegraphics[width=0.7\textwidth]{casi_uso}
+    \caption{Diagramma dei casi d'uso considerati in formato UML}
+    \label{fig:casi_uso}
+\end{figure}
+In questo diagramma sono rappresentati graficamente i casi d'uso considerati durante la progettazione ai fini dell'implementazione finale.\\
+Il sistema è utilizzabile quindi da due tipologie di utenti, chi si occupa della parte DevOps vera e propria e chi invece è lo sviluppatore classico.\\
+L'utente DevOps è in grado di eseguire push di eventuali modifiche di codice ai microservizi, ma ha anche i privilegi di amministrazione per modificare il codice lato Terraform o aggiornare delle componenti nelle pipeline. Lo sviluppatore invece può utilizzare l'infrastruttura solo indirettamente eseguendo push di codice. Ognuna di queste azioni attiva uno specifico job jenkins che farà eseguire una pipeline.\\
+
 \section{Definizione dell'infrastruttura}
 \subsection{Ulteriori dettagli progettuali}
 
