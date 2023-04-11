@@ -310,6 +310,33 @@ resource "random_string" "suffix" {
 
 
 \subsection{pipeline per la gestione delle modifiche}
+La pipeline è stata divisa in 3 job diversi:
+\begin{enumerate}
+\item \textit{Git clone.} \\
+Il primo passo fa semplicemente il clone del repository previo cancellazione della workspace directory per un clone pulito.\\
+Jenkins fa partire questo primo job solo in caso di modifiche apportate lato Git e effettua un controllo ogni 15 minuti tramite un cronjob.
+\item \textit{Build Terraform.} \\
+In questo passo intermedio viene effettuato un login su Azure per assicurarsi di essere autenticati con la sottoscrizione corretta. In questo modo se la macchina dovesse essere utilizzata anche da altri utenti si evita di andare a fare modifiche su macchine che risiedono su altre sottoscrizioni Azure controllate da altri DevOps.\\
+Fatto questo, viene effettuata la compilazione del codice e applicato allo stesso tempo, eseguendo eventualmente le azioni necessarie a modificare l'infrastruttura.\\
+\item \textit{Deploy test.} \\
+In questo ultimo passo viene semplicemente testato che il cluster Kubernetes sia stato creato correttamente e che sia funzionante, rilasciando sopra di esso una piccola applicazione di test.\\
+Se il job precedente non viene concluso correttamente senza errori, la pipeline si ferma senza far cominciare quest'ultimo.\\
+Questo accade per ogni concatenazione, avendo impostato tramite un apposito flag che i trigger di post-compilazione si attivano solo se la compilazione del processo attualmente in esecuzione è stabile.\\
+\end{enumerate}
+
+Le credenziali di accesso sono gestite tramite un sistema interno di Jenkins dove è possibile definirle comodamente per poi utilizzarle come variabili negli script Bash.\\
+Per tenere traccia delle risorse attualmente attive, Terraform crea durante la prima esecuzione del codice un file di configurazione dello stato, il quale viene aggiornato di volta in volta. In questo modo se si esegue due volte lo stesso codice, non viene creata due volte la risorsa.
+
+\begin{lstlisting}[caption={\\\textit{Frammento di codice relativo alla compilazione del codice Terraform.\\ Nelle ultime righe viene effettuato un collegamento con il cluster appena creato e lanciato un comando per visualizzare i nodi in modo da accertarsi che sia operativo.}}]
+az login -u $azure_user -p $azure_psw
+terraform init
+terraform apply -auto-approve 
+
+rs_group=$(terraform output resource_group_name | cut -d '"' -f 2)
+cluster_name=$(terraform output kubernetes_cluster_name | cut -d '"' -f 2)
+az aks get-credentials --resource-group $rs_group --name $cluster_name
+kubectl get nodes
+\end{lstlisting}
 
 \section{Sviluppo pipeline per il rilascio dei micro servizi e modifica di puntamenti nel sorgente}
 \subsection{Definizione delle pipeline}
