@@ -130,6 +130,7 @@ Come da requisiti iniziali anche le successive modifiche all'applicazione poteva
     \caption{The DevOps infinity loop(ogni tecnologia utilizzata nel proprio settore) \cite{devopsloopimg}}
     \label{fig:tech_used}
 \end{figure}
+
 In questa figura è possibile osservare l'elenco delle tecnologie utilizzate, ognuna posta nel proprio settore di appartenenza lungo il ciclo infinito dello sviluppo DevOps.\cite{devopsloop}\\
 Questo ciclo parte dalla stesura del codice fino ad arrivare al suo monitoraggio per poi ricominciare da capo senza mai concludersi.\\
 Per quanto riguarda il versionamento del codice è stato utilizzato \textbf{Git}. \\
@@ -145,19 +146,30 @@ Infine per la parte di build e release è stato utilizzato \textbf{Jenkins} per 
 Come anticipato, in questa sezione si parlerà più nel dettaglio delle tecnologie già menzionate e più nel dettaglio della fase di studio.
 \subsection{Docker}
 Docker è un software progettato per permettere di eseguire applicazioni in ambienti isolati minimali e facilmente distribuibili, anche detti container. \cite{docker} \\
-Andando più nel dettaglio questi container non sono altro che delle applicazioni "virtualizzate" ma che condividono il kernel del sistema operativo della macchina che li ospita. \\
-Nel contesto del progetto Docker è stato usato direttamente solo per il versionamento delle immagini dei microservizi. È stato invece usato in modo implicito e indiretto all'interno di Kubernetes.
+In particolare questi container non sono altro che delle applicazioni "virtualizzate" che condividono il kernel del sistema operativo della macchina che li ospita. Risultano quindi isolate e facilmente distribuibili. \\
+Nel contesto del progetto Docker è stato usato direttamente solo per il versionamento delle immagini dei microservizi. È stato invece usato in modo implicito e indiretto all'interno di Kubernetes. \\ 
+
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{docker}
+    \caption{Esempio di rappresentazione di alcuni container rispetto al kernel del sistema operativo della macchina ospitante. \cite{dockerimg}}
+    \label{fig:docker}
+\end{figure}
+
+
 \subsection{Kubernetes}
 Kubernetes, anche chiamata k8s, è una piattaforma open source che automatizza le operazioni sui container. Grazie ad essa vengono eliminati molti dei processi manuali coinvolti nel deploy di applicazioni in container. \\
-Non è più necessario manipolare i container a mano con diversi comandi Docker, ma è sufficiente scrivere un manifesto in codice formato YAML. In questo file vengono definite le specifiche del container e ogni volta che dovrà essere modificato basterà modificare il codice e successivamente applicare di nuovo il file. Il container stesso viene posto all'interno di un oggetto a un livello più alto di atrazione chiamato pod.\\
+Questa caratteristica viene chiamata orchestrazione, dunque non è più necessario manipolare i container a mano con diversi comandi Docker, ma è sufficiente scrivere un manifesto in codice formato YAML. In questo file vengono definite le specifiche del container e ogni volta che dovrà essere modificato basterà modificare il codice e successivamente applicare di nuovo il file. Il container stesso viene posto all'interno di un oggetto a un livello più alto di atrazione chiamato pod.\\
 È possibile mettere in cluster gruppi di nodi su cui sono in esecuzioni dei container e Kubernetes aiuta a gestirli in modo facile ed efficiente.\\
-Questa tecnologia si pone a un livello d'astrazione più alto rispetto a Docker e i nodi all'interno del cluster contengono già al loro interno un container runtime.\cite{kubernetes}\\ \\
+Questa tecnologia si pone a un livello d'astrazione più alto rispetto a Docker e i nodi all'interno del cluster contengono già al loro interno un container runtime.\cite{kubernetes}\\ 
+Un'ulteriore vantaggio legato a Kubernetes risiede nei suoi meccanismi di autoscale sia orizzontale che verticale oltre che a tecniche di scheduling interne, così da garantire che i servizi delle applicazioni siano sempre disponibili.
+
 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{k8s}
     \caption{Una rappresentazione grafica di un cluster Kubernetes. \cite{k8simg}}
-    \label{fig:tech_used}
+    \label{fig:k8s}
 \end{figure}
+
 
 \subsection{Azure}
 Nel corso della fase di studio, tra le varie alternative possibili è stato scelto Azure come cloud provider su cui fare affidamento.\\
@@ -175,6 +187,13 @@ az aks create \
 \subsection{Terraform}
 Si tratta di una tecnologia di automazione dotata di un proprio linguaggio dichiarativo HCL(Hashicorp Configuration Language), con la quale è possibile creare, modificare e eventualmente distruggere risorse descritte nel codice.\\
 Nel contesto del progetto Terraform è stato utilizzato per definire le specifiche del cluster Kubernetes come servizio di Azure. Una volta che è stato definito tramite codice, non è stato più necessario andarlo a creare attraverso Azure stesso, ma semplicemente facendo compilare e applicare il codice.
+
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{terraform}
+    \caption{Raffigurazione di come Terraform possa essere usato con diversi tipi di servizio e differenti provider. \cite{terraformimg}}
+    \label{fig:terraform}
+\end{figure}
+
 \subsection{Jenkins}
 Questo è stato uno strumento fondamentale ai fini del progetto, nonché ponte di collegamento tra tutte le tecnologie introdotte finora. \\
 È un software open source di supporto allo sviluppo che permette facilmente l'integrazione continua e automatica nei rilasci del software.\cite{jenkins}\\
@@ -261,8 +280,15 @@ Wikipedia, Infrastructure As Code. \url{https://it.wikipedia.org/wiki/Infrastruc
 \bibitem{devopsloopimg}
 Shalb, What is DevOps and where is it applied? 2019.\url{https://shalb.com/blog/what-is-devops-and-where-is-it-applied/}
 
+\bibitem{dockerimg}
+Mindmajix, Docker Container Software And Architecture, 2023. \url{https://mindmajix.com/docker-architecture}
+
 \bibitem{k8simg}
 Datafusionspecialists, Containerization and Cloud Mobility, 2019. \url{https://datafusionspecialists.com/solutions/containerization-and-cloud-mobility/}
+
+\bibitem{terraformimg}
+Auth0, Community Developer Brings HashiCorp Terraform to Auth0, 2020. \url{https://auth0.com/blog/community-developer-brings-hashicorp-terraform-to-auth0/}
+
 \bibitem{devopsloop}
 TechTarget, Demystify the DevOps process, step by step, 2023. \url{https://www.techtarget.com/searchitoperations/tip/Demystify-the-DevOps-process-step-by-step}
 
