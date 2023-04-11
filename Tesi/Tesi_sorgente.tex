@@ -170,6 +170,7 @@ Un'ulteriore vantaggio legato a Kubernetes risiede nei suoi meccanismi di autosc
     \label{fig:k8s}
 \end{figure}
 
+Ad esempio nella figura 3 si può notare che il cluster è configurato con 4 nodi, uno master e tre worker. All'interno del master vi sono tutte le componenti di sistema di Kubernetes, mentre sui nodi worker risiedono i microservizi deployati. Il contenuto dei manifesti YAML viene comunicato al nodo master che successivamente va a schedulare i container in modo appropriato sui vari nodi.
 
 \subsection{Azure}
 Nel corso della fase di studio, tra le varie alternative possibili è stato scelto Azure come cloud provider su cui fare affidamento.\\
@@ -190,7 +191,7 @@ Nel contesto del progetto Terraform è stato utilizzato per definire le specific
 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{terraform}
-    \caption{Raffigurazione di come Terraform possa essere usato con diversi tipi di servizio e differenti provider. \cite{terraformimg}}
+    \caption{Raffigurazione di come Terraform possa essere usato con diversi tipi di servizi e differenti provider. \cite{terraformimg}}
     \label{fig:terraform}
 \end{figure}
 
@@ -199,6 +200,13 @@ Questo è stato uno strumento fondamentale ai fini del progetto, nonché ponte d
 È un software open source di supporto allo sviluppo che permette facilmente l'integrazione continua e automatica nei rilasci del software.\cite{jenkins}\\
 Jenkins è stato utilizzato in questo progetto per costruire delle cosiddette pipeline, ovvero delle collezioni di eventi che succedono uno dopo l'altro. Andando più nel dettaglio, ogni pipeline prodotta è divisa in diversi blocchi, ognuno dei quali esegue determinate azioni tramite un apposito script in Bash.\\
 Ogni qualvolta viene fatta una modifica, una pipeline specifica viene attivata ed eseguita dall'inizio fino alla fine, il tutto in autonomia e senza bisogno di passi manuali.
+
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{jenkins}
+    \caption{Rappresentazione grafica di una pipeline eseguita da Jenkins. \cite{jenkinsimg}}
+    \label{fig:jenkins}
+\end{figure}
+
 \section{Requisiti}
 Richiamando in breve i requisiti e analizzandoli, l'infrastruttura finale doveva rispettare le seguenti richieste:\\
 \begin{enumerate}
@@ -280,29 +288,33 @@ Wikipedia, Infrastructure As Code. \url{https://it.wikipedia.org/wiki/Infrastruc
 \bibitem{devopsloopimg}
 Shalb, What is DevOps and where is it applied? 2019.\url{https://shalb.com/blog/what-is-devops-and-where-is-it-applied/}
 
-\bibitem{dockerimg}
-Mindmajix, Docker Container Software And Architecture, 2023. \url{https://mindmajix.com/docker-architecture}
-
-\bibitem{k8simg}
-Datafusionspecialists, Containerization and Cloud Mobility, 2019. \url{https://datafusionspecialists.com/solutions/containerization-and-cloud-mobility/}
-
-\bibitem{terraformimg}
-Auth0, Community Developer Brings HashiCorp Terraform to Auth0, 2020. \url{https://auth0.com/blog/community-developer-brings-hashicorp-terraform-to-auth0/}
-
 \bibitem{devopsloop}
 TechTarget, Demystify the DevOps process, step by step, 2023. \url{https://www.techtarget.com/searchitoperations/tip/Demystify-the-DevOps-process-step-by-step}
 
 \bibitem{docker}
 Wikipedia, Docker. \url{https://it.wikipedia.org/wiki/Docker#Orchestrazione}
 
+\bibitem{dockerimg}
+Mindmajix, Docker Container Software And Architecture, 2023. \url{https://mindmajix.com/docker-architecture}
+
 \bibitem{kubernetes}
 Wikipedia, Kubernetes. \url{https://it.wikipedia.org/wiki/Kubernetes}
+
+\bibitem{k8simg}
+Datafusionspecialists, Containerization and Cloud Mobility, 2019. \url{https://datafusionspecialists.com/solutions/containerization-and-cloud-mobility/}
 
 \bibitem{cloud}
 Ionos.it, I vantaggi del cloud computing. 2023 \url{https://www.ionos.it/digitalguide/server/know-how/i-vantaggi-del-cloud-computing/}
 
+\bibitem{terraformimg}
+Auth0, Community Developer Brings HashiCorp Terraform to Auth0, 2020. \url{https://auth0.com/blog/community-developer-brings-hashicorp-terraform-to-auth0/}
+
 \bibitem{jenkins}
 Wikipedia, Jenkins. \url{https://it.wikipedia.org/wiki/Jenkins_(software)}
+
+\bibitem{jenkinsimg}
+Slideshare, Jenkins Pipeline, 2019. \url{https://www.slideshare.net/pavan5780/jenkins-pipeline-164020728}
+
 %
 %
 \end{thebibliography}
