@@ -263,7 +263,7 @@ Richiamando il concetto nel precedente paragrafo, nel momento in cui il codice T
     \label{fig:push_modifica}
 \end{figure}
 
-Sulla figura 5 non vi è molto altro da aggiungere, fondamentalmente tratta lo stesso processo spiegato per la figura 3, tolta tutta la parte legata a Terraform e concentrandosi solo sul deploy di nuove modifiche.
+Sulla figura 9 non vi è molto altro da aggiungere, fondamentalmente tratta lo stesso processo spiegato per la figura 7, tolta tutta la parte legata a Terraform e concentrandosi solo sul deploy di nuove modifiche.
 
 \chapter{Implementazione in funzione dei disegni progettuali}
 \section{Codice Terraform e pipeline dedicata}
@@ -339,7 +339,38 @@ kubectl get nodes
 \end{lstlisting}
 
 \section{Sviluppo pipeline per il rilascio dei micro servizi e modifica di puntamenti nel sorgente}
+Una volta tirata su l'infrastruttura principale, è stato possibile in una seconda fase di implementazione andare a eseguire il rilascio finale dell'applicazione a microservizi citata in precedenza.
 \subsection{Definizione delle pipeline}
+L'applicazione era composta di quattro microservizi, il frontend e un api gateway.\\
+Per ognuno di questi è stata sviluppata una pipeline composta dai seguenti job:\\
+\begin{enumerate}
+\item \textit{Git clone.}\\
+Senza ripetersi, svolge un'azione identica al primo passo della pipeline per il codice Terraform.
+\item \textit{Build codice.}\\
+In questo step viene solamente compilato il codice in locale. Se non ci sono errori, si passa alla build dell'immagine Docker.
+\item \textit{Build immagine.}\\
+Prima di tutto viene eseguito il login sul repository Docker privato. Successivamente a partire dal codice già compilato viene eseguita la build dell'immagine usando il relativo Dockerfile presente nel repository clonato. Oltre a ciò viene anche eseguito il versionamento dell'immagine in modo da poter effetuare eventuali rollback in futuro.
+\item \textit{Deploy k8s.}\\
+In quest'ultimo passo viene anche qui eseguito un login su Azure, ci si collega al cluster corretto e infine viene applicato il manifesto YAML presente sul repository. \\ \\
+\end{enumerate}
+
+\begin{lstlisting}[caption={\\\textit{Frammento di codice relativo al versionamento e alla build dell'immagine.}}]
+#login sul repository docker
+sudo docker login -u $docker_usr -p $docker_psw http://localhost:8083/repository/docker-hosted/
+#Buildo l'immagine dal Dockerfile(setto nome immagine e prelevo ultimo numero di versione dal repo docker)
+img=interview_quiz
+version=$(sudo docker images localhost:8083/repository/docker-hosted/interview_quiz --format "{{.Tag}}" | grep -A 1 latest | awk 'NR==2')
+if [ -z "$version" ]; then
+	version="v1"
+else
+    #estraggo il numero di versione e lo incremento di 1
+    version_number=$(echo "$version" | cut -c 2-)
+    new_version_number=$((version_number + 1))
+    version="v$new_version_number"
+fi
+sudo docker build -t $img .
+\end{lstlisting} 
+
 \subsection{Modifica nel codice sorgente}
 
 \chapter{Conclusioni: risultati raggiunti e possibili miglioramenti}
