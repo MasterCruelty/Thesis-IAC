@@ -267,8 +267,50 @@ Sulla figura 5 non vi è molto altro da aggiungere, fondamentalmente tratta lo s
 
 \chapter{Implementazione in funzione dei disegni progettuali}
 \section{Codice Terraform e pipeline dedicata}
+La fase di implementazione di tutto il sistema progettato e descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo. \\
+Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.\\
+
 \subsection{Definizione via codice}
+
+All'interno dei sorgenti HCL sono state definite le specifiche che doveva avere il cluster Kubernetes di Azure. Nel dettaglio è stato deciso di quanti nodi si doveva comporre, la dimensione delle macchine e il numero massimo di pod che poteva sostenere ogni nodo.\\
+È stato impostato l'autoscale sui nodi con un minimo di tre fino a un massimo di sei. Il numero massimo di pod è stato impostato a 30.\\
+Le informazioni relative al gruppo risorse e la regione geografica sono impostate come variabili all'interno di un altro sorgente e possono essere richiamate tramite il prefisso 'var'.
+\begin{lstlisting}[caption={\\\textit{Codice sorgente all'interno del file main.tf.\\ }}]
+#Definizione della risorsa di tipo cluster Kubernetes
+resource "azurerm_kubernetes_cluster" "k8s" {
+  name                = "k8s-cluster-iac-${random_string.suffix.result}"
+  location            = var.resource_group_location
+  resource_group_name = var.resource_group_name
+  dns_prefix          = "aks-dns"
+
+  default_node_pool {
+    name                = "agent"
+    node_count          = 3
+    vm_size             = "Standard_DS2_v2"
+    max_pods            = 30
+    enable_auto_scaling = true
+    min_count           = 3
+    max_count           = 6
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+  depends_on = [
+    random_string.suffix
+  ]
+}
+
+#risorsa di tipo stringa per generare il suffisso di 3 caratteri casuali sul nome della risorsa
+resource "random_string" "suffix" {
+  length  = 3
+  special = false
+}
+\end{lstlisting}
+
+
 \subsection{pipeline per la gestione delle modifiche}
+
 \section{Sviluppo pipeline per il rilascio dei micro servizi e modifica di puntamenti nel sorgente}
 \subsection{Definizione delle pipeline}
 \subsection{Modifica nel codice sorgente}
