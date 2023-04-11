@@ -149,9 +149,15 @@ Andando più nel dettaglio questi container non sono altro che delle applicazion
 Nel contesto del progetto Docker è stato usato direttamente solo per il versionamento delle immagini dei microservizi. È stato invece usato in modo implicito e indiretto all'interno di Kubernetes.
 \subsection{Kubernetes}
 Kubernetes, anche chiamata k8s, è una piattaforma open source che automatizza le operazioni sui container. Grazie ad essa vengono eliminati molti dei processi manuali coinvolti nel deploy di applicazioni in container. \\
-Non è più necessario manipolare i container a mano con diversi comandi Docker, ma è sufficiente scrivere un manifesto in codice formato YAML. In questo file vengono definite le specifiche del container e ogni volta che dovrà essere modificato basterà modificare il codice e successivamente applicare di nuovo il file. \\
+Non è più necessario manipolare i container a mano con diversi comandi Docker, ma è sufficiente scrivere un manifesto in codice formato YAML. In questo file vengono definite le specifiche del container e ogni volta che dovrà essere modificato basterà modificare il codice e successivamente applicare di nuovo il file. Il container stesso viene posto all'interno di un oggetto a un livello più alto di atrazione chiamato pod.\\
 È possibile mettere in cluster gruppi di nodi su cui sono in esecuzioni dei container e Kubernetes aiuta a gestirli in modo facile ed efficiente.\\
 Questa tecnologia si pone a un livello d'astrazione più alto rispetto a Docker e i nodi all'interno del cluster contengono già al loro interno un container runtime.\cite{kubernetes}\\ \\
+
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{k8s}
+    \caption{Una rappresentazione grafica di un cluster Kubernetes. \cite{k8simg}}
+    \label{fig:tech_used}
+\end{figure}
 
 \subsection{Azure}
 Nel corso della fase di studio, tra le varie alternative possibili è stato scelto Azure come cloud provider su cui fare affidamento.\\
@@ -212,17 +218,25 @@ A partire da sinistra abbiamo tutto ciò che riguarda il versionamento del codic
 Per dare più chiarezza sull'utilizzo dei repository dei microservizi, essenzialmente tramite essi è stato preso il codice alla fonte ed è stato definito al loro interno un manifesto in formato YAML per le specifiche del container.\\
 Nel momento in cui viene eseguito un push sul repository, in particolare sul ramo master, viene attivato un trigger da Jenkins, il quale farà partire l'esecuzione della pipeline collegata.\\
 Come prima cosa quindi viene eseguito un pull delle modifiche o direttamente clonato l'intero repository. Successivamente il codice viene compilato, ne viene costruita e versionata l'immagine per il container, poi viene eseguito un push su un repository Docker privato e infine viene eseguito il deploy effettivo sul cluster Kubernetes.\\
-Il repository privato per le immagini è stato ospitato tramite Nexus che è una tecnologia dedicata a questo tipo di uso.
+Il repository privato per le immagini è stato ospitato tramite Nexus che è una tecnologia dedicata a questo tipo di utilizzo.
 \subsection{Ulteriori dettagli progettuali}
+Ora che è stato presentato il disegno che rappresenta la definizione completa, andremo a considerare separatamente i casi d'uso.
 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{modifica_terraform}
     \caption{Dettaglio progettuale per la sola modifica delle specifiche del sistema.}
     \label{fig:modifica_terraform}
+\end{figure} 
+
+Richiamando il concetto nel precedente paragrafo, nel momento in cui il codice Terraform viene modificato e si verifica un push sul repository, Jenkins attiva il trigger e la pipeline specifica. In questa casistica viene solo eseguito lo script in Bash che va a compilare e eseguire il codice HCL, causando l'aggiunta, la modifica oppure la distruzione di risorse.\\
+
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{push_modifica}
+    \caption{Dettaglio progettuale per il deploy di nuove modifiche dei microservizi.}
+    \label{fig:push_modifica}
 \end{figure}
 
-In questa figura vediamo da più vicino il caso d'uso riguardante la modifica dell'infrastruttura. \\
-Richiamando il concetto nel precedente paragrafo, nel momento in cui il codice Terraform viene modificato e si verifica un push sul repository, Jenkins attiva il trigger e la pipeline specifica. In questa casistica viene solo compilato ed eseguito il codice, causando l'aggiunta, la modifica oppure la distruzione di risorse.
+Sulla figura 5 non vi è molto altro da aggiungere, fondamentalmente tratta lo stesso processo spiegato per la figura 3, tolta tutta la parte legata a Terraform e concentrandosi solo sul deploy di nuove modifiche.
 
 \chapter{Implementazione in funzione dei disegni progettuali}
 \section{Codice Terraform e pipeline dedicata}
@@ -245,8 +259,10 @@ Richiamando il concetto nel precedente paragrafo, nel momento in cui il codice T
 Wikipedia, Infrastructure As Code. \url{https://it.wikipedia.org/wiki/Infrastructure_as_Code}
 
 \bibitem{devopsloopimg}
-Shalb.com, What is DevOps and where is it applied? 2019.\url{https://shalb.com/blog/what-is-devops-and-where-is-it-applied/}
+Shalb, What is DevOps and where is it applied? 2019.\url{https://shalb.com/blog/what-is-devops-and-where-is-it-applied/}
 
+\bibitem{k8simg}
+Datafusionspecialists, Containerization and Cloud Mobility, 2019. \url{https://datafusionspecialists.com/solutions/containerization-and-cloud-mobility/}
 \bibitem{devopsloop}
 TechTarget, Demystify the DevOps process, step by step, 2023. \url{https://www.techtarget.com/searchitoperations/tip/Demystify-the-DevOps-process-step-by-step}
 
