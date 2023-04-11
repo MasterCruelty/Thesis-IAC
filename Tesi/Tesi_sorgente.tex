@@ -265,7 +265,7 @@ Richiamando il concetto nel precedente paragrafo, nel momento in cui il codice T
 
 Sulla figura 9 non vi è molto altro da aggiungere, fondamentalmente tratta lo stesso processo spiegato per la figura 7, tolta tutta la parte legata a Terraform e concentrandosi solo sul deploy di nuove modifiche.
 
-\chapter{Implementazione in funzione dei disegni progettuali}
+\chapter{Implementazione dell'infrastruttura}
 \section{Codice Terraform e pipeline dedicata}
 La fase di implementazione di tutto il sistema progettato e descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo. \\
 Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.\\
@@ -403,11 +403,20 @@ Giunti a questo punto, il sistema risulta completo, dunque se lo sviluppatore di
     \label{fig:app_micro3}
 \end{figure}
 
-\chapter{Conclusioni: risultati raggiunti e possibili miglioramenti}
+\chapter{Conclusioni}
 \section{risultati raggiunti al termine}
-
+Al termine di questo progetto i risultati raggiunti sono stati diversi, li ritroviamo qui di seguito:\\
+\begin{itemize}
+\item \textit{Appreso competenze in ambito DevOps.}\\
+Nel corso del tirocinio è stato possibile approcciarsi da zero con questa metodologia di sviluppo, riuscendo a carpirne i vantaggi del suo utilizzo e a sviluppare nuove competenze.\\
+\item \textit{Appreso conoscenze su diverse tecnologie.}\\
+Grazie a questo progetto è stato possibile conoscere e acquisire competenze su molte tecnologie in breve tempo. In aggiunta al background accademico, tutto ciò ha arricchito molto il bagaglio di competenze informatiche.\\
+\item \textit{Realizzata un'infrastruttura fedele ai requisiti iniziali.}\\
+Terminato il progetto, è stata realizzata un'infrastruttura che rispetta i requisiti e i vincoli imposti nel corso del tirocinio, seppur con piccole modifiche rispetto a quanto fatto in sede di progettazione.\\
+Durante la fase di implementazione è stato reso necessario il non utilizzo di Nexus per il repository Docker privato a causa di ostacoli tecnici deviando quindi su un normale Docker Hub privato per non sforare con i tempi.
+\end{itemize}
 \section{miglioramenti}
-
+Per quanto riguarda eventuali miglioramenti futuri, ciò che si potrebbe aggiungere è un sistema di monitoraggio dell'intero sistema. Allo stato attuale il controllo e la gestione delle risorse viene eseguito manualmente da shell, ma si potrebbe invece implementare un sistema più sofisticato utilizzando qualche tool esterno come ad esempio Grafana.
 %
 %			BIBLIOGRAFIA
 %
