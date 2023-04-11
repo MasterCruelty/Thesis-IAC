@@ -351,13 +351,13 @@ In questo step viene solamente compilato il codice in locale. Se non ci sono err
 \item \textit{Build immagine.}\\
 Prima di tutto viene eseguito il login sul repository Docker privato. Successivamente a partire dal codice già compilato viene eseguita la build dell'immagine usando il relativo Dockerfile presente nel repository clonato. Oltre a ciò viene anche eseguito il versionamento dell'immagine in modo da poter effetuare eventuali rollback in futuro.
 \item \textit{Deploy k8s.}\\
-In quest'ultimo passo viene anche qui eseguito un login su Azure, ci si collega al cluster corretto e infine viene applicato il manifesto YAML presente sul repository. \\ \\
+In quest'ultimo passo viene anche qui eseguito un login su Azure, ci si collega al cluster corretto e infine viene applicato il manifesto YAML presente sul repository. \\ \\ \\
 \end{enumerate}
 
 \begin{lstlisting}[caption={\\\textit{Frammento di codice relativo al versionamento e alla build dell'immagine.}}]
 #login sul repository docker
 sudo docker login -u $docker_usr -p $docker_psw http://localhost:8083/repository/docker-hosted/
-#Buildo l'immagine dal Dockerfile(setto nome immagine e prelevo ultimo numero di versione dal repo docker)
+#Build dell'immagine dal Dockerfile(prelevo ultimo numero di versione dal repo docker)
 img=interview_quiz
 version=$(sudo docker images localhost:8083/repository/docker-hosted/interview_quiz --format "{{.Tag}}" | grep -A 1 latest | awk 'NR==2')
 if [ -z "$version" ]; then
@@ -371,10 +371,41 @@ fi
 sudo docker build -t $img .
 \end{lstlisting} 
 
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{pipeline}
+    \caption{Una delle pipeline sviluppate vista dall'interfaccia web di Jenkins. Si possono vedere i quattro blocchi che la compongono per il rilascio delle modifiche del microservizio chiamato 'question'.}
+    \label{fig:pipeline}
+\end{figure}
+
 \subsection{Modifica nel codice sorgente}
+Dopo aver sviluppato le pipeline, per poter rendere l'applicazione già sviluppata compatibile con il sistema finora costruito, si è reso necessario apportare alcune piccole modifiche ai puntamenti presenti nel sorgente.\\
+All'interno del servizio api gateway, sono state modificate tutte le rotte mettendo al loro posto il nome di dominio FQDN di ogni servizio definito nei manifesti per Kubernetes. Ad esempio se il microservizio si chiama \textit{question} ed è stato esposto sulla porta 8082, nella rotta viene inserito: \textit{http://question-service.interview-tool.svc.cluster.local:8082}\\ \\
+Per come era strutturata l'applicazione architetturalmente, solo il frontend e l'api gateway sono stati esposti su internet, mentre i quattro microservizi sono raggiungibili solamente passando attraverso il gateway.\\ 
+Un'ulteriore modifica è stata effettuata ai file di proprietà di ogni microservizio per regolare le rotte interne al cluster, sempre utilizzando il nome dominio FQDN dei servizi come fatto nel gateway. Sempre negli stessi file è stata modificata la rotta per il collegamento al database in modo da far collegare il microservizio al container del database definito tramite Kubernetes.\\ \\
+Giunti a questo punto, il sistema risulta completo, dunque se lo sviluppatore di questa applicazione dovesse apportare delle modifiche a uno qualunque dei microservizi che la compongono, verrebbero deployate in tempo reale nell'arco di 15 minuti totalmente in automatico seguendo le procedure descritte nei precedenti paragrafi. \\ \\ \\ \\ \\ 
+
+
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{app_micro}
+    \caption{Schermata principale dell'applicazione una volta deployata con successo sull'infrastruttura sviluppata.}
+    \label{fig:app_micro}
+\end{figure}
+
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{app_micro2}
+    \caption{Visualizzazione dei container in esecuzione per l'applicazione rilasciata nel suo namespace specifico. \\Ogni microservizio ha un suo database indipendente.}
+    \label{fig:app_micro2}
+\end{figure}
+
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{app_micro3}
+    \caption{Visualizzazione di tutti i servizi attivi per l'applicazione rilasciata.\\Come spiegato in precedenza, abbiamo solo due servizi esposti su internet, mentre gli altri 4 comunicano internamente al cluster e sono raggiungibili attraverso il gateway.}
+    \label{fig:app_micro3}
+\end{figure}
 
 \chapter{Conclusioni: risultati raggiunti e possibili miglioramenti}
 \section{risultati raggiunti al termine}
+
 \section{miglioramenti}
 
 %
