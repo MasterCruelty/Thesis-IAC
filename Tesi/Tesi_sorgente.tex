@@ -10,10 +10,6 @@
 \makeatother
 %--end fix
 \documentclass[a4paper,12pt]{report}
-%    \renewcommand{\baselinestretch}{1.6}      % interline spacing
-%
-% \includeonly{}
-%
 %			PREAMBOLO
 %
 \usepackage[a4paper]{geometry}
@@ -61,15 +57,12 @@
 \makeatother
 %--end fix
 
-
-
 % per le accentate
 \usepackage[utf8]{inputenc}
 %
 \newtheorem{myteor}{Teorema}[section]
 %
 \newenvironment{teor}{\begin{myteor}\sl}{\end{myteor}}
-%
 %
 %			TITOLO
 %
@@ -88,12 +81,10 @@
 \beforepreface
 
 \afterpreface
-% 
-% 
-% 
+%  
 \chapter{Introduzione}
 \section{IAC: definizione e vantaggi}
-La metodologia IAC(Infrastructure As Code), in italiano "infrastruttura come codice", è una strategia che punta a gestire l'intero ciclo di vita di un'infrastruttura mediante codice. Quindi non c'è bisogno di configurazione hardware fisica o strumenti interattivi esterni, è sufficiente uno o più linguaggi dichiarativi o di scripting e compilare correttamente dei file di definizione.\cite{iacdef} \\ 
+La metodologia IAC(Infrastructure As Code), in italiano \textit{infrastruttura come codice}, è una strategia che punta a gestire l'intero ciclo di vita di un'infrastruttura mediante codice. Quindi non c'è bisogno di configurazione hardware fisica o strumenti interattivi esterni, è sufficiente uno o più linguaggi dichiarativi o di scripting e compilare correttamente dei file di definizione.\cite{iacdef} \\ 
 In questo modo è molto più semplice e rapido modificare o eseguire miglioramenti al sistema senza dover ripensare completamente la struttura o stravolgerne le componenti. \\
 Come vedremo nei successivi paragrafi, la potenza di alcune delle tecnologie trattate lungo lo sviluppo di questo progetto risiede proprio nel fatto di poter essere gestite direttamente tramite codice.\\
 In questo capitolo introduttivo saranno descritti gli obiettivi prefissati per questo progetto, le fasi principali che sono state svolte e una breve descrizione delle tecnologie utilizzate. \\
@@ -106,21 +97,28 @@ Gli obiettivi principali prefissati per questo progetto di tirocinio sono stati 
 \item \textit{Costruire un'infrastruttura in grado di essere rilasciata attraverso il cloud e sulla quale fosse possibile rilasciare applicazioni basate su microservizi.}
 \end{enumerate}
 \subsection{Dal metodo tradizionale all'approccio DevOps}
-DevOps è una metodologia che punta a ridurre in modo considerevole i tempi di rilascio di nuovo software incorporando nello stesso di team di sviluppo le competenze necessarie per costruire l'infrastruttura adatta al rilascio del software grazie ai concetti di container, microservizi e cloud computing.\\
+DevOps è una metodologia che punta a ridurre in modo considerevole i tempi di rilascio di nuovo software incorporando nello stesso di team di sviluppo le competenze necessarie per costruire l'infrastruttura adatta al rilascio del software grazie ai concetti di container, microservizi e cloud computing. Questo fa si che la la collaborazione tra sviluppatori e operatori IT sia molto più stretta e interconnessa. \cite{defdevops}\\
 Tradizionalmente il processo di rilascio avveniva più lentamente nell'arco di mesi. Il team di sviluppo doveva coordinarsi con gli altri team per le diverse fasi dello sviluppo. Oggi invece con lo sviluppo DevOps si possono eseguire tutte le fasi senza dover aspettare un team separato, garantendo che il tempo di rilascio delle modifiche del software possa avvenire con frequenza oraria o anche meno, oltre ad essere continuativo e automatico.\\
 Un'ulteriore progresso in questo tipo di approcci è il DevSecOps, una strategia che va a integrare anche la sicurezza e il testing nel CI(Continuous Integration) e CD(Continuous Deployment). \\La difficoltà che sorge nel DevSecOps è la risoluzione dei problemi legati alla sicurezza internamente al team di sviluppo, poichè gli sviluppatori devono prima acquisire le competenze necessarie per risolvere questo tipo di problemi.
+
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{def_devops}
+    \caption{Rappresentazione grafica di come DevOps si ponga nell'intersezione tra sviluppo, garanzia di qualità e operazioni IT.) \cite{defdevops}}
+    \label{fig:def_devops}
+\end{figure}
+
 \subsection{Ciclo di vita dell'infrastruttura}
-Si intende in tal senso che l'obiettivo specifico fosse di comprendere l'intero ciclo a partire dall'analisi dei requisiti fino ad arrivare alla progettazione e implementazione finale del sistema.
+Si intende in tal senso che l'obiettivo specifico fosse di comprendere e acquisire competenze sull'intero ciclo a partire dall'analisi dei requisiti, per passare poi alla progettazione delle specifiche necessarie fino ad arrivare all'implementazione finale del sistema.
 \section{Fasi principali svolte}
 Le principali fasi svolte durante il progetto di tirocinio sono state le seguenti:
 \begin{enumerate}
 \item \textit{Studio delle tecnologie coinvolte.} \\
-Durante questa fase sono state approcciate diverse tecnologie per la prima volta. Vi è stato un primo apprendimento teorico dei concetti che ruotavano attorno al funzionamento di questi strumenti, mentre successivamente tali concetti sono stati applicati in maniera pratica eseguendo diversi test.
+Durante questa fase sono state approcciate diverse tecnologie per la prima volta. Inizialmente sono stati appresi i concetti a livello teorico che ruotavano attorno al funzionamento di questi strumenti. Successivamente questi concetti sono stati messi in pratica applicandoli a diversi test, partendo da basso livello e salendo man mano di astrazione.\\
 \item \textit{Progettazione dell'infrastruttura.} \\
-In questa fase è stata eseguita un'analisi dei requisiti e definita la struttura dell'infrastruttura finale. Per fare ciò è stata sfruttata la fase iniziale di studio per capire in che modo le varie tecnologie andassero collegate tra loro in maniera corretta.
+In questa fase è stata eseguita un'analisi dei requisiti e definita la struttura dell'infrastruttura finale. Per fare ciò è stata sfruttata la fase iniziale di studio per capire in che modo le varie tecnologie andassero collegate tra loro correttamente.
 \item \textit{Implementazione del sistema.}\\
 In questa fase finale è stata implementata l'infrastruttura in funzione dei disegni progettuali prodotti in precedenza.\\
-Una volta costruito il sistema e quindi l'ambiente operativo di base, è stata poi rilasciata al suo interno un'applicazione a microservizi. \\
+Infine è stata poi rilasciata al suo interno un'applicazione a microservizi. \\
 Come da requisiti iniziali anche le successive modifiche all'applicazione potevano avvenire in automatico in regola con la CI/CD. \\
 \end{enumerate}
 
@@ -133,20 +131,21 @@ Come da requisiti iniziali anche le successive modifiche all'applicazione poteva
 
 In questa figura è possibile osservare l'elenco delle tecnologie utilizzate, ognuna posta nel proprio settore di appartenenza lungo il ciclo infinito dello sviluppo DevOps.\cite{devopsloop}\\
 Questo ciclo parte dalla stesura del codice fino ad arrivare al suo monitoraggio per poi ricominciare da capo senza mai concludersi.\\
-Per quanto riguarda il versionamento del codice è stato utilizzato \textbf{Git}. \\
-Spostandoci sul lato del deploy notiamo \textbf{Azure} che è il cloud provider scelto durante la fase di studio, \textbf{Terraform} per la vera e propria infrastruttura a livello di codice e \textbf{Docker} per la sua funzionalità nella creazione di container.\\
-Potremo invece considerare \textbf{Kubernetes}  come il "controller" di tutto il sistema costruito durante il progetto.\\
+Sul settore del deploy notiamo \textbf{Azure} che è il cloud provider scelto durante la fase di studio, \textbf{Terraform} per la vera e propria infrastruttura a livello di codice e \textbf{Docker} per la sua funzionalità nella creazione di container.\\
+Potremo invece considerare \textbf{Kubernetes}  come il \textit{'controller'} di tutto il sistema costruito durante il progetto.\\
 Infine per la parte di build e release è stato utilizzato \textbf{Jenkins} per tutto ciò che riguarda il continuo rilascio in maniera automatica.\\
+Va specificato che l'uso di determinate tecnologie a scapito di altre è legato puramente a vincoli imposti durante il progetto. Il tutto è realizzabile senza problemi utilizzando anche cloud provider diversi o tecnologie con qualità equivalenti per le parti di automazione e rilascio automatico.\\
 \textit{Nel prossimo capitolo andremo ad approfondire meglio i concetti principali di queste tecnologie e come sono state utilizzate nel contesto del progetto.}
 
 %-------------------------------------------------
 
 \chapter{Fase di studio e analisi dei requisiti}
 \section{Tecnologie}
-Come anticipato, in questa sezione si parlerà più nel dettaglio delle tecnologie già menzionate e più nel dettaglio della fase di studio.
+Come anticipato, in questa sezione si parlerà più nel dettaglio delle tecnologie già menzionate e più nel dettaglio della fase di studio. Successivamente rivedremo i requisiti e come sono state messi insieme i vari strumenti per farli comunicare come un sistema unico.
 \subsection{Docker}
 Docker è un software progettato per permettere di eseguire applicazioni in ambienti isolati minimali e facilmente distribuibili, anche detti container. \cite{docker} \\
-In particolare questi container non sono altro che delle applicazioni "virtualizzate" che condividono il kernel del sistema operativo della macchina che li ospita. Risultano quindi isolate e facilmente distribuibili. \\
+In particolare questi container non sono altro che delle applicazioni "virtualizzate" che condividono il kernel del sistema operativo della macchina che li ospita.\\
+Il vantaggio principale nell'utilizzo di Docker risiede nel fatto che sviluppando a piccoli servizi indipendenti rispetto a un'applicazione monolitica tradizionale, nel momento in cui un servizio dovesse andare offline, il resto dell'applicazione sarebbe ancora disponibile. Al contrario con un metodo tradizionale, tutto il sistema crollerebbe in una volta sola.\\
 Nel contesto del progetto Docker è stato usato direttamente solo per il versionamento delle immagini dei microservizi. È stato invece usato in modo implicito e indiretto all'interno di Kubernetes. \\ 
 
 \begin{figure}[h]
@@ -158,9 +157,9 @@ Nel contesto del progetto Docker è stato usato direttamente solo per il version
 
 \subsection{Kubernetes}
 Kubernetes, anche chiamata k8s, è una piattaforma open source che automatizza le operazioni sui container. Grazie ad essa vengono eliminati molti dei processi manuali coinvolti nel deploy di applicazioni in container. \\
-Questa caratteristica viene chiamata orchestrazione, dunque non è più necessario manipolare i container a mano con diversi comandi Docker, ma è sufficiente scrivere un manifesto in codice formato YAML. In questo file vengono definite le specifiche del container e ogni volta che dovrà essere modificato basterà modificare il codice e successivamente applicare di nuovo il file. Il container stesso viene posto all'interno di un oggetto a un livello più alto di atrazione chiamato pod.\\
-È possibile mettere in cluster gruppi di nodi su cui sono in esecuzioni dei container e Kubernetes aiuta a gestirli in modo facile ed efficiente.\\
-Questa tecnologia si pone a un livello d'astrazione più alto rispetto a Docker e i nodi all'interno del cluster contengono già al loro interno un container runtime.\cite{kubernetes}\\ 
+Questa caratteristica viene chiamata orchestrazione, dunque non è più necessario manipolare i container a mano con diversi comandi Docker, ma è sufficiente scrivere un manifesto in codice formato YAML. In questo file vengono definite le specifiche del container e ogni volta che dovrà essere modificato basterà modificare il codice e successivamente applicare di nuovo il file. Il container stesso viene posto all'interno di un oggetto a un livello più alto di atrazione chiamato pod, il quale può essere considerato come una scatola che al suo interno contiene il container e le informazioni che lo definiscono.\\
+Questa è una tecnologia che funziona in cluster, quindi ho gruppi di nodi su cui sono in esecuzioni dei container e Kubernetes aiuta a gestirli in modo facile ed efficiente attraverso l'orchestrazione.\\
+K8s si pone a un livello d'astrazione più alto rispetto a Docker e i nodi all'interno del cluster contengono già al loro interno un container runtime.\cite{kubernetes}\\ 
 Un'ulteriore vantaggio legato a Kubernetes risiede nei suoi meccanismi di autoscale sia orizzontale che verticale oltre che a tecniche di scheduling interne, così da garantire che i servizi delle applicazioni siano sempre disponibili.
 
 
@@ -424,6 +423,9 @@ Per quanto riguarda eventuali miglioramenti futuri, ciò che si potrebbe aggiung
 %
 \bibitem{iacdef}
 Wikipedia, Infrastructure As Code. \url{https://it.wikipedia.org/wiki/Infrastructure_as_Code}
+
+\bibitem{defdevops}
+Wikipedia, DevOps. \url{https://it.wikipedia.org/wiki/DevOps}
 
 \bibitem{devopsloopimg}
 Shalb, What is DevOps and where is it applied? 2019.\url{https://shalb.com/blog/what-is-devops-and-where-is-it-applied/}
