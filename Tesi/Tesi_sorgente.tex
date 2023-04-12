@@ -268,13 +268,13 @@ Sulla figura 10 non vi è molto altro da aggiungere, fondamentalmente tratta lo 
 \chapter{Implementazione dell'infrastruttura}
 \section{Codice Terraform e pipeline dedicata}
 La fase di implementazione di tutto il sistema progettato e descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo. \\
-Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.\\
+Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.
 
 \subsection{Definizione via codice}
 
-All'interno dei sorgenti HCL sono state definite le specifiche che doveva avere il cluster Kubernetes di Azure. Nel dettaglio è stato deciso di quanti nodi si doveva comporre, la dimensione delle macchine e il numero massimo di pod che poteva sostenere ogni nodo.\\
+All'interno dei sorgenti HCL sono state definite le specifiche che doveva avere il cluster Kubernetes di Azure. Nel dettaglio è stato deciso di quanti nodi si doveva comporre, la dimensione delle macchine e il numero massimo di pod che poteva sostenere ogni nodo. \\Inoltre è stata definita una risorsa locale di tipo stringa per generare un suffisso casuale in modo da evitare conflitti con eventuali risorse di nome identico già presenti sul cloud.\\
 È stato impostato l'autoscale sui nodi con un minimo di tre fino a un massimo di sei. Il numero massimo di pod è stato impostato a 30.\\
-Le informazioni relative al gruppo risorse e la regione geografica sono impostate come variabili all'interno di un altro sorgente e possono essere richiamate tramite il prefisso 'var'.
+Le informazioni relative al gruppo risorse e la regione geografica sono impostate come variabili all'interno di un altro sorgente e possono essere richiamate tramite il prefisso 'var'.\\ \\ 
 \begin{lstlisting}[caption={\\\textit{Codice sorgente all'interno del file main.tf.\\ }}]
 #Definizione della risorsa di tipo cluster Kubernetes
 resource "azurerm_kubernetes_cluster" "k8s" {
@@ -310,11 +310,11 @@ resource "random_string" "suffix" {
 
 
 \subsection{pipeline per la gestione delle modifiche}
-La pipeline è stata divisa in 3 job diversi:
+La pipeline è stata divisa in 3 job diversi:\\
 \begin{enumerate}
 \item \textit{Git clone.} \\
 Il primo passo fa semplicemente il clone del repository previo cancellazione della workspace directory per un clone pulito.\\
-Jenkins fa partire questo primo job solo in caso di modifiche apportate lato Git e effettua un controllo ogni 15 minuti tramite un cronjob.
+Jenkins fa partire questo primo job solo in caso di modifiche apportate lato Git e effettua un controllo per verificarlo ogni 15 minuti tramite un cronjob definito tramite l'interfaccia web. \\
 \item \textit{Build Terraform.} \\
 In questo passo intermedio viene effettuato un login su Azure per assicurarsi di essere autenticati con la sottoscrizione corretta. In questo modo se la macchina dovesse essere utilizzata anche da altri utenti si evita di andare a fare modifiche su macchine che risiedono su altre sottoscrizioni Azure controllate da altri DevOps.\\
 Fatto questo, viene effettuata la compilazione del codice e applicato allo stesso tempo, eseguendo eventualmente le azioni necessarie a modificare l'infrastruttura.\\
@@ -381,7 +381,68 @@ sudo docker build -t $img .
 Dopo aver sviluppato le pipeline, per poter rendere l'applicazione già sviluppata compatibile con il sistema finora costruito, si è reso necessario apportare alcune piccole modifiche ai puntamenti presenti nel sorgente.\\
 All'interno del servizio api gateway, sono state modificate tutte le rotte mettendo al loro posto il nome di dominio FQDN di ogni servizio definito nei manifesti per Kubernetes. Ad esempio se il microservizio si chiama \textit{question} ed è stato esposto sulla porta 8082, nella rotta viene inserito: \textit{http://question-service.interview-tool.svc.cluster.local:8082}\\ \\
 Per come era strutturata l'applicazione architetturalmente, solo il frontend e l'api gateway sono stati esposti su internet, mentre i quattro microservizi sono raggiungibili solamente passando attraverso il gateway.\\ 
-Un'ulteriore modifica è stata effettuata ai file di proprietà di ogni microservizio per regolare le rotte interne al cluster, sempre utilizzando il nome dominio FQDN dei servizi come fatto nel gateway. Sempre negli stessi file è stata modificata la rotta per il collegamento al database in modo da far collegare il microservizio al container del database definito tramite Kubernetes.\\ \\
+\begin{lstlisting}[caption={\\\textit{Manifesto YAML definito per uno dei quattro microservizi chiamato user.\\ Nella prima parte è definito un oggetto di tipo deployment che presenta le specifiche del container, a partire dal nome, namespace fino all'immagine che dovrà esserci montata sopra.\\ Sempre sul deployment sono stati definiti anche dei volumi per montare delle chiavi necessarie per il microservizio, oltre a delle variabili d'ambiente per richiamare il database.\\ Nella seconda parte del manifesto è definito un oggetto di tipo service per esporre sulla porta 8080.}}]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  namespace: interview-tool
+  annotations:
+    meta.version: "v1"
+  labels:
+    app: user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: user
+        image: <nome-immagine>
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /certificates/public/
+          name: public-pem
+        - mountPath: /certificates/private/
+          name: private-pem
+        env:
+        - name: MYSQL_HOST
+          value: db-user-service
+        - name: MYSQL_USER
+          value: root
+        - name: MYSQL_PASSWORD
+          value: password
+      volumes:
+      - name: public-pem
+        secret:
+          secretName: public-key
+      - name: private-pem
+        secret:
+          secretName: private-key        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: interview-tool
+spec:
+  selector:
+    app: user
+  ports:
+  - name: user-service
+    port: 8080
+    targetPort: 8080
+\end{lstlisting}
+Un'ulteriore modifica è stata effettuata ai file di proprietà di ogni microservizio per regolare le rotte interne al cluster, sempre utilizzando il nome dominio FQDN dei servizi come fatto nel gateway. Sempre negli stessi file è stata modificata la rotta per il collegamento al database in modo da far collegare il microservizio al container del database definito tramite Kubernetes.\\ \\ \\ \\
 Giunti a questo punto, il sistema risulta completo, dunque se lo sviluppatore di questa applicazione dovesse apportare delle modifiche a uno qualunque dei microservizi che la compongono, verrebbero deployate in tempo reale nell'arco di 15 minuti totalmente in automatico seguendo le procedure descritte nei precedenti paragrafi. \\ \\ \\ \\ \\ 
 
 
