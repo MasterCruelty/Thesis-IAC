@@ -218,8 +218,8 @@ Richiamando in breve i requisiti e analizzandoli, l'infrastruttura finale doveva
 \subsection{collegamenti tra le tecnologie}
 Si tratta di una delle parti più complesse svolte durante il tirocinio. Essenzialmente è stato un punto di transizione tra la fase di studio e la fase di progettazione.\\
 Ora che abbiamo introdotto a sufficienza tutti gli strumenti utilizzati, è necessario collegarli tra loro e farli comunicare correttamente, così da completare metaforicamente un grande puzzle.\\
-Ad esempio Terraform, Kubernetes e Azure sono stati collegati tra loro come se fossero un'entità unica. Kubernetes ci fornisce il controllo sui container, Azure un servizio per avere il cluster già pronto e infine Terraform ci permette di creare la risorsa scrivendo solo codice. \\
-La difficoltà principale nel fare ciò è stato capire a fondo che ruolo svolgeva ogni pezzo così da sapere in che modo serviva per far funzionare al meglio il pezzo successivo.
+Ad esempio Terraform, Kubernetes e Azure sono stati collegati tra loro come se fossero un'entità unica. Kubernetes ci fornisce il controllo sui container, Azure un servizio per avere il cluster già pronto e sempre online e infine Terraform ci permette di creare la risorsa dal cloud scrivendo solo codice. \\
+La difficoltà principale nel fare ciò è stato capire a fondo che ruolo svolgeva ogni tecnologia così da sapere in che modo serviva per far funzionare al meglio lo strumento successivo.
 
 \chapter{Progettazione dell'infrastruttura}
 \section{Casi d'uso}
@@ -230,8 +230,8 @@ La difficoltà principale nel fare ciò è stato capire a fondo che ruolo svolge
     \label{fig:casi_uso}
 \end{figure}
 In questo diagramma sono rappresentati graficamente i casi d'uso considerati durante la progettazione ai fini dell'implementazione finale.\\
-Il sistema è utilizzabile quindi da due tipologie di utenti, chi si occupa della parte DevOps vera e propria e chi invece è lo sviluppatore classico.\\
-L'utente DevOps è in grado di eseguire push di eventuali modifiche di codice ai microservizi, ma ha anche i privilegi di amministrazione per modificare il codice lato Terraform o aggiornare delle componenti nelle pipeline. Lo sviluppatore invece può utilizzare l'infrastruttura solo indirettamente eseguendo push di codice. Ognuna di queste azioni attiva uno specifico job jenkins che farà eseguire una pipeline.\\
+Il sistema è utilizzabile quindi da due tipologie di utenti, chi si occupa della parte DevOps vera e propria e chi invece è lo sviluppatore dell'applicazione a microservizi che andrà ad essere deployata sull'infrastruttura.\\
+L'utente DevOps è in grado di eseguire push di eventuali modifiche di codice ai microservizi, ma ha anche i privilegi di amministrazione per modificare il codice lato Terraform o aggiornare delle componenti nelle pipeline. Lo sviluppatore invece può utilizzare l'infrastruttura solo indirettamente eseguendo push di codice innescando i trigger rispettivi. Ognuna di queste azioni attiva uno specifico job jenkins che farà eseguire una pipeline.\\
 \section{Definizione dell'infrastruttura}
 
 \begin{figure}[h]
@@ -241,13 +241,13 @@ L'utente DevOps è in grado di eseguire push di eventuali modifiche di codice ai
 \end{figure}
 
 È possibile notare che l'infrastruttura è divisa in tre macro aree.\\
-A partire da sinistra abbiamo tutto ciò che riguarda il versionamento del codice. Alla base vi è un repository Git, che può essere quello che contiene il codice Terraform oppure uno dei repository che contiene il codice di uno dei microservizi che andranno ad essere deployati sopra il sistema.\\
-Per dare più chiarezza sull'utilizzo dei repository dei microservizi, essenzialmente tramite essi è stato preso il codice alla fonte ed è stato definito al loro interno un manifesto in formato YAML per le specifiche del container.\\
+A partire da sinistra abbiamo tutto ciò che riguarda il versionamento del codice. Alla base vi è un repository Git, il quale può essere quello che contiene il codice Terraform oppure uno dei repository che contiene il codice di uno dei microservizi che andranno ad essere deployati sopra il sistema.\\
+Per dare più chiarezza sull'utilizzo dei repository dei microservizi, essenzialmente tramite essi è stato preso il codice dello sviluppatore alla fonte ed è stato inizialmente definito al loro interno un manifesto in formato YAML per le specifiche del container.\\
 Nel momento in cui viene eseguito un push sul repository, in particolare sul ramo master, viene attivato un trigger da Jenkins, il quale farà partire l'esecuzione della pipeline collegata.\\
-Come prima cosa quindi viene eseguito un pull delle modifiche o direttamente clonato l'intero repository. Successivamente il codice viene compilato, ne viene costruita e versionata l'immagine per il container, poi viene eseguito un push su un repository Docker privato e infine viene eseguito il deploy effettivo sul cluster Kubernetes.\\
+Come prima cosa quindi viene eseguito un pull delle modifiche o direttamente clonato l'intero repository. Successivamente il codice viene compilato, ne viene costruita e versionata l'immagine per il container, poi viene eseguito un push su un repository Docker privato e infine viene eseguito il deploy effettivo sul cluster Kubernetes, utilizzando il manifesto scritto in primo luogo.\\
 Il repository privato per le immagini è stato ospitato tramite Nexus che è una tecnologia dedicata a questo tipo di utilizzo.
 \subsection{Ulteriori dettagli progettuali}
-Ora che è stato presentato il disegno che rappresenta la definizione completa, andremo a considerare separatamente i casi d'uso.
+Ora che è stato presentato il disegno che rappresenta la definizione completa, andremo a considerare separatamente i casi d'uso. In particolare consideriamo la casistica in cui viene modificato solo il codice Terraform e senza ulteriori dettagli avendolo già spiegato, il caso in cui viene applicata una modifica sui microservizi con conseguente deploy. \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{modifica_terraform}
@@ -255,7 +255,7 @@ Ora che è stato presentato il disegno che rappresenta la definizione completa, 
     \label{fig:modifica_terraform}
 \end{figure} 
 
-Richiamando il concetto nel precedente paragrafo, nel momento in cui il codice Terraform viene modificato e si verifica un push sul repository, Jenkins attiva il trigger e la pipeline specifica. In questa casistica viene solo eseguito lo script in Bash che va a compilare e eseguire il codice HCL, causando l'aggiunta, la modifica oppure la distruzione di risorse.\\
+Richiamando il concetto nel precedente paragrafo, nel momento in cui il codice Terraform viene modificato e si verifica un push sul repository, Jenkins attiva il trigger e la pipeline specifica. In questa casistica viene solo eseguito lo script in Bash che va a compilare e eseguire il codice HCL, causando l'aggiunta, la modifica oppure la distruzione di risorse.\\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{push_modifica}
@@ -263,7 +263,7 @@ Richiamando il concetto nel precedente paragrafo, nel momento in cui il codice T
     \label{fig:push_modifica}
 \end{figure}
 
-Sulla figura 9 non vi è molto altro da aggiungere, fondamentalmente tratta lo stesso processo spiegato per la figura 7, tolta tutta la parte legata a Terraform e concentrandosi solo sul deploy di nuove modifiche.
+Sulla figura 10 non vi è molto altro da aggiungere, fondamentalmente tratta lo stesso processo spiegato per la figura 8, tolta tutta la parte legata a Terraform e concentrandosi solo sul deploy di nuove modifiche.
 
 \chapter{Implementazione dell'infrastruttura}
 \section{Codice Terraform e pipeline dedicata}
