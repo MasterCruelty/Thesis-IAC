@@ -292,7 +292,9 @@ All'interno dei sorgenti HCL sono state definite le specifiche che doveva avere 
 È stato impostato l'autoscale sui nodi con un minimo di tre fino a un massimo di sei. Il numero massimo di pod è stato impostato a 30.\\
 Il numero di nodi e di pods è stato scelto in funzione dell'eventuale carico a cui poteva essere sottoposto il sistema. In questo contesto l'applicazione finale che doveva essere rilasciata aveva solamente 4 microservizi e il suo scopo era di elaborare e gestire dei quiz da colloquio tecnico aziendale. Ipotizzando un utilizzo non intensivo è stato ragionevole scegliere un basso numero di nodi a garantire che l'applicazione fosse online anche nel caso in cui uno di essi fosse andato offline, mentre il numero di pods era più che sufficiente a gestire il numero di eventuali repliche da distribuire sui tre nodi.\\
 Le informazioni relative al gruppo risorse e la regione geografica sono impostate come variabili all'interno di un altro sorgente e possono essere richiamate tramite il prefisso \textit{'var'}. In questo modo se dovesse essere necessario modificare questi valori, non andrò a toccare il sorgente main, ma cambierò solo le variabili contenute nel sorgente dedicato, così da rendere più mantenibile tutto il codice.\\
-Allo stesso modo vi è un file sorgente chiamato \textit{'output'} atto a contenere tutte quelle informazioni che si intende recuperare rapidamente una volta creata e deployata la risorsa definita. In questo caso sono stati scelti i valori relativi al gruppo risorse e al nome del cluster creato, così da reperirli con un apposito comando Terraform.\\ 
+Allo stesso modo vi è un file sorgente chiamato \textit{'output'} atto a contenere tutte quelle informazioni che si intende recuperare rapidamente una volta creata e deployata la risorsa definita. In questo caso sono stati scelti i valori relativi al gruppo risorse e al nome del cluster creato, così da reperirli con un apposito comando.\\
+Un'ulteriore file \textit{provider} è necessario per definire e comunicare all'interprete quale provider intendiamo utilizzare in modo che durante l'inizializzazione dell'ambiente vengano installate le componenti necessarie a far eseguire il codice correttamente. Dunque in questo caso essendo Azure il nostro fornitore di servizi, si va a specificarlo in questo file dedicato, svolgendo un'operazione simile a un'importazione di libreria per un linguaggio standard.\\
+Qui di seguito può essere visionato il sorgente prodotto per il file main così da apprendere meglio la struttura del linguaggio dichiarativo implementato da Terraform e come nel dettaglio viene definita una risorsa e le sue specifiche.\\ \\ \\ \\ \\ \\
 
 \begin{lstlisting}[caption={\\\textit{Codice sorgente all'interno del file main.tf.\\ }}]
 #Definizione della risorsa di tipo cluster Kubernetes
@@ -324,7 +326,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 resource "random_string" "suffix" {
   length  = 3
   special = false
-}
+} 
 \end{lstlisting}
 
 
@@ -333,18 +335,25 @@ La pipeline è stata divisa in 3 job diversi:\\
 \begin{enumerate}
 \item \textit{Git clone.} \\
 Il primo passo fa semplicemente il clone del repository previo cancellazione della workspace directory per un clone pulito.\\
-Jenkins fa partire questo primo job solo in caso di modifiche apportate lato Git e effettua un controllo per verificarlo ogni 15 minuti tramite un cronjob definito tramite l'interfaccia web. \\
+L'eliminazione della cartella di lavoro è una scelta fatta spuntando un'apposita flag e risulta conveniente per assicurarsi che ogni volta venga eseguito un clone pulito di tutto il progetto onde evitare eventuali conflitti con file residui precedenti.\\
+\textbf{Jenkins} fa partire questo primo job solo in caso di modifiche apportate lato \textbf{Git} e effettua un controllo per verificarlo ogni 15 minuti tramite un cronjob definito tramite l'interfaccia web. \\
+L'intervallo di tempo scelto per eseguire un controllo sulle modifiche è stata una scelta di progetto. Se si fosse scelto di eseguirlo ogni minuto, in questo contesto specifico non ci sarebbero cambiamenti significativi avendo pochi servizi, ma nel caso in cui così non fosse, le prestazioni della macchina su cui è installato Jenkins ne risentirebbero. \\In un caso estremo avremmo che tutte le pipeline andrebbero in esecuzione contemporaneamente, causando un'eventuale esaurimento delle risorse computazionali e problemi nel rilascio. \\
+Dunque, per simulare una situazione reale, è stato scelto 15 minuti per avere la certezza di più rilasci nell'arco della giornata e minimizzando la probabilità di avere tutte le pipeline in esecuzione nello stesso momento.
+
 \item \textit{Build Terraform.} \\
 In questo passo intermedio viene effettuato un login su Azure per assicurarsi di essere autenticati con la sottoscrizione corretta. In questo modo se la macchina dovesse essere utilizzata anche da altri utenti si evita di andare a fare modifiche su macchine che risiedono su altre sottoscrizioni Azure controllate da altri DevOps.\\
 Fatto questo, viene effettuata la compilazione del codice e applicato allo stesso tempo, eseguendo eventualmente le azioni necessarie a modificare l'infrastruttura.\\
+La scelta di un passo intermedio prima del deploy effettivo è dovuta all'eventualità di errori nel codice, così da bloccare preventivamente la pipeline senza passare al blocco successivo.\\
+
 \item \textit{Deploy test.} \\
 In questo ultimo passo viene semplicemente testato che il cluster Kubernetes sia stato creato correttamente e che sia funzionante, rilasciando sopra di esso una piccola applicazione di test.\\
-Se il job precedente non viene concluso correttamente senza errori, la pipeline si ferma senza far cominciare quest'ultimo.\\
+Anche questa è stata una scelta presa durante lo sviluppo, poiché se questa applicazione minimale risulta attiva sul cluster, è garantito che il sistema stia funzionando correttamente dopo essere stato deployato nel passo precedente.
+Come già detto se il job relativo alla build del codice non viene concluso correttamente senza errori, la pipeline si ferma senza far cominciare quest'ultimo.\\
 Questo accade per ogni concatenazione, avendo impostato tramite un apposito flag che i trigger di post-compilazione si attivano solo se la compilazione del processo attualmente in esecuzione è stabile.\\
 \end{enumerate}
 
-Le credenziali di accesso sono gestite tramite un sistema interno di Jenkins dove è possibile definirle comodamente per poi utilizzarle come variabili negli script Bash.\\
-Per tenere traccia delle risorse attualmente attive, Terraform crea durante la prima esecuzione del codice un file di configurazione dello stato, il quale viene aggiornato di volta in volta. In questo modo se si esegue due volte lo stesso codice, non viene creata due volte la risorsa.
+Le credenziali di accesso sono gestite tramite un sistema interno di \textbf{Jenkins} dove è possibile definirle comodamente per poi utilizzarle come variabili negli script \textbf{Bash}.\\
+Inoltre, per tenere traccia delle risorse attualmente attive, \textbf{Terraform} crea durante la prima esecuzione del codice un file di configurazione dello stato corrente, il quale viene aggiornato di volta in volta. In questo modo se si esegue due volte lo stesso codice, non viene creata due volte la risorsa.
 
 \begin{lstlisting}[caption={\\\textit{Frammento di codice relativo alla compilazione del codice Terraform.\\ Nelle ultime righe viene effettuato un collegamento con il cluster appena creato e lanciato un comando per visualizzare i nodi in modo da accertarsi che sia operativo.}}]
 az login -u $azure_user -p $azure_psw
