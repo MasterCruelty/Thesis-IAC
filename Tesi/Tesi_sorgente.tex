@@ -86,17 +86,21 @@
 \section{Descrizione del progetto}
 Il progetto di tirocinio svolto è consistito nella definizione, rilascio e controllo di un'infrastruttura IAC.\\
 Questa piattaforma aveva il vincolo di dover essere rilasciata attraverso il cloud e avere la capacità di poter ospitare applicazioni a micro servizi. Inoltre doveva essere in grado di integrare e rilasciare le successive modifiche di questi microservizi in automatico senza ausilio di passi manuali.\\
-Di seguito si andrà ad evidenziare obiettivi formativi e tecnici, oltre a introdurre le metodologie utilizzate dando così una panoramica più ampia sul progetto e sui concetti che sono stati incontrati e approfonditi.\\ \\
+Tutto il lavoro svolto è ruotato attorno a ciò che viene definito come sviluppo DevOps, una metodologia che andremo a spiegare e discutere nei successivi paragrafi. \\
+In questo capitolo introduttivo saranno descritti gli obiettivi formativi e tecnici del progetto, le fasi principali che sono state svolte, oltre a introdurre le metodologie utilizzate dando così una panoramica più ampia sul progetto e sui concetti che sono stati incontrati e approfonditi. 
+Verranno anche fatte alcune considerazioni su ciò che può comportare l'uso di determinati strumenti e soluzioni.\\
+In questo modo sarà più immediato richiamare alcuni concetti che useremo nei capitoli successivi.
 
 \subsection{Obiettivi formativi}
 Gli obiettivi formativi prefissati per questo progetto di tirocinio sono stati i seguenti:\\
 \begin{enumerate}
 \item \textit{Acquisire competenze in ambito DevOps.}
 \item \textit{Acquisire conoscenze sul ciclo di vita di un'infrastruttura.}\\
-Si intende in tal senso che l'obiettivo specifico fosse di comprendere e acquisire competenze sull'intero ciclo a partire dall'analisi dei requisiti, per passare poi alla progettazione delle specifiche necessarie fino ad arrivare all'implementazione finale del sistema.
+Si intende con ciclo di vita che l'obiettivo specifico fosse quello di comprendere e acquisire competenze a partire dall'analisi dei requisiti, per passare poi alla progettazione delle specifiche necessarie fino ad arrivare all'implementazione finale del sistema.\\
+Difatti il progetto di tirocinio è stato diviso in diverse fasi ben distinte che comprendono tutte queste caratteristiche.
 \end{enumerate}
 \subsection{Dal metodo tradizionale all'approccio DevOps}
-DevOps è una metodologia che punta a ridurre in modo considerevole i tempi di rilascio di nuovo software incorporando nello stesso di team di sviluppo le competenze necessarie per costruire l'infrastruttura adatta al rilascio del software grazie ai concetti di container, microservizi e cloud computing. Questo fa si che la la collaborazione tra sviluppatori e operatori IT sia molto più stretta e interconnessa. \cite{defdevops}\\
+\textbf{DevOps} è una metodologia che punta a ridurre in modo considerevole i tempi di rilascio di nuovo software incorporando nello stesso di team di sviluppo le competenze necessarie per costruire l'infrastruttura adatta al rilascio del software grazie ai concetti di container, microservizi e cloud computing. Questo fa si che la la collaborazione tra sviluppatori e operatori IT sia molto più stretta e interconnessa. \cite{defdevops}\\
 Tradizionalmente il processo di rilascio avveniva più lentamente nell'arco di mesi. Il team di sviluppo doveva coordinarsi con gli altri team per le diverse fasi dello sviluppo. Oggi invece con lo sviluppo DevOps si possono eseguire tutte le fasi senza dover aspettare un team separato, garantendo che il tempo di rilascio delle modifiche del software possa avvenire con frequenza oraria o anche meno, oltre ad essere continuativo e automatico.\\
 Un'ulteriore progresso in questo tipo di approcci è il DevSecOps, una strategia che va a integrare anche la sicurezza e il testing nel CI(Continuous Integration) e CD(Continuous Deployment). \\La difficoltà che sorge nel DevSecOps è la risoluzione dei problemi legati alla sicurezza internamente al team di sviluppo, poichè gli sviluppatori devono prima acquisire le competenze necessarie per risolvere questo tipo di problemi.\\
 
@@ -109,15 +113,14 @@ C'è dunque da considerare che al raggiungimento di un certo strato, si possano 
 
 \subsection{Obiettivi tecnici}
 Come anticipato, a livello tecnico l'obiettivo principale era di costruire un'infrastruttura in grado di essere rilasciata attraverso il cloud e sulla quale fosse possibile rilasciare applicazioni basate su microservizi.\\
-Dunque per fare ciò sono state sfruttate le conoscenze apprese durante il conseguimento degli obiettivi formativi.
+Per fare ciò sono state sfruttate le conoscenze apprese durante il conseguimento degli obiettivi formativi, con l'utilizzo attivo delle tecnologie studiate alle quali si è dedicato il capitolo successivo.
 
 
 \section{IAC: definizione e vantaggi}
 La metodologia IAC(Infrastructure As Code), in italiano \textit{infrastruttura come codice}, è una strategia che punta a gestire l'intero ciclo di vita di un'infrastruttura mediante codice. Quindi non c'è bisogno di configurazione hardware fisica o strumenti interattivi esterni, è sufficiente uno o più linguaggi dichiarativi o di scripting e compilare correttamente dei file di definizione.\cite{iacdef} \\ 
 In questo modo è molto più semplice e rapido modificare o eseguire miglioramenti al sistema senza dover ripensare completamente la struttura o stravolgerne le componenti. \\
-Come vedremo nei successivi paragrafi, la potenza di alcune delle tecnologie trattate lungo lo sviluppo di questo progetto risiede proprio nel fatto di poter essere gestite direttamente tramite codice.\\
-In questo capitolo introduttivo saranno descritti gli obiettivi prefissati per questo progetto, le fasi principali che sono state svolte e una breve descrizione delle tecnologie utilizzate. \\
-In questo modo sarà più immediato richiamare alcuni concetti che useremo nei capitoli successivi.
+Questa metodologia è direttamente relazionata con DevOps poiché gli strumenti che utilizzano IAC puntano a rendere più coesi i team di sviluppo massimizzando la resa finale. L'automazione stessa punta a eliminare tutti quei processi che prima venivano svolti manualmente rendendo tutto lo sviluppo più efficiente e produttivo.\cite{iaceng}\\
+Come vedremo nei capitoli successivi, la potenza di alcune delle tecnologie trattate lungo lo sviluppo di questo progetto risiede proprio nel fatto di poter essere gestite direttamente tramite codice.\\ \\ \\ \\ \\ \\
 
 \section{Fasi principali svolte}
 Le principali fasi svolte durante il progetto di tirocinio sono state le seguenti:
@@ -507,8 +510,12 @@ Ionos.it, I vantaggi del cloud computing. 2023 \url{https://www.ionos.it/digital
 \bibitem{iacdef}
 Wikipedia, Infrastructure As Code. \url{https://it.wikipedia.org/wiki/Infrastructure_as_Code}
 
+\bibitem{iaceng}
+Wikipedia, Infrastructure as code(iaC). \url{https://en.wikipedia.org/wiki/Infrastructure_as_code#Relationship_to_DevOps}
+
 \bibitem{devopsloopimg}
 Shalb, What is DevOps and where is it applied? 2019.\url{https://shalb.com/blog/what-is-devops-and-where-is-it-applied/}
+
 
 \bibitem{devopsloop}
 TechTarget, Demystify the DevOps process, step by step, 2023. \url{https://www.techtarget.com/searchitoperations/tip/Demystify-the-DevOps-process-step-by-step}
