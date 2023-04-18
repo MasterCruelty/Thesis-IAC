@@ -86,29 +86,31 @@
 \section{Descrizione del progetto}
 Il progetto di tirocinio svolto è consistito nella definizione, rilascio e controllo di un'infrastruttura IAC.\\
 Questa piattaforma aveva il vincolo di dover essere rilasciata attraverso il cloud e avere la capacità di poter ospitare applicazioni a micro servizi. Inoltre doveva essere in grado di integrare e rilasciare le successive modifiche di questi microservizi in automatico senza ausilio di passi manuali.\\
+Di seguito si andrà ad evidenziare obiettivi formativi e tecnici, oltre a introdurre le metodologie utilizzate dando così una panoramica più ampia sul progetto e sui concetti che sono stati incontrati e approfonditi.\\ \\
 
 \subsection{Obiettivi formativi}
-Gli obiettivi formativi prefissati per questo progetto di tirocinio sono stati i seguenti:
+Gli obiettivi formativi prefissati per questo progetto di tirocinio sono stati i seguenti:\\
 \begin{enumerate}
 \item \textit{Acquisire competenze in ambito DevOps.}
-\item \textit{Acquisire conoscenze sul ciclo di vita di un'infrastruttura.}
+\item \textit{Acquisire conoscenze sul ciclo di vita di un'infrastruttura.}\\
+Si intende in tal senso che l'obiettivo specifico fosse di comprendere e acquisire competenze sull'intero ciclo a partire dall'analisi dei requisiti, per passare poi alla progettazione delle specifiche necessarie fino ad arrivare all'implementazione finale del sistema.
 \end{enumerate}
 \subsection{Dal metodo tradizionale all'approccio DevOps}
 DevOps è una metodologia che punta a ridurre in modo considerevole i tempi di rilascio di nuovo software incorporando nello stesso di team di sviluppo le competenze necessarie per costruire l'infrastruttura adatta al rilascio del software grazie ai concetti di container, microservizi e cloud computing. Questo fa si che la la collaborazione tra sviluppatori e operatori IT sia molto più stretta e interconnessa. \cite{defdevops}\\
 Tradizionalmente il processo di rilascio avveniva più lentamente nell'arco di mesi. Il team di sviluppo doveva coordinarsi con gli altri team per le diverse fasi dello sviluppo. Oggi invece con lo sviluppo DevOps si possono eseguire tutte le fasi senza dover aspettare un team separato, garantendo che il tempo di rilascio delle modifiche del software possa avvenire con frequenza oraria o anche meno, oltre ad essere continuativo e automatico.\\
-Un'ulteriore progresso in questo tipo di approcci è il DevSecOps, una strategia che va a integrare anche la sicurezza e il testing nel CI(Continuous Integration) e CD(Continuous Deployment). \\La difficoltà che sorge nel DevSecOps è la risoluzione dei problemi legati alla sicurezza internamente al team di sviluppo, poichè gli sviluppatori devono prima acquisire le competenze necessarie per risolvere questo tipo di problemi.
+Un'ulteriore progresso in questo tipo di approcci è il DevSecOps, una strategia che va a integrare anche la sicurezza e il testing nel CI(Continuous Integration) e CD(Continuous Deployment). \\La difficoltà che sorge nel DevSecOps è la risoluzione dei problemi legati alla sicurezza internamente al team di sviluppo, poichè gli sviluppatori devono prima acquisire le competenze necessarie per risolvere questo tipo di problemi.\\
 
-\begin{figure}[h]
-	\includegraphics[width=1.0\textwidth]{def_devops}
-    \caption{Rappresentazione grafica di come DevOps si ponga nell'intersezione tra sviluppo, garanzia di qualità e operazioni IT.) \cite{defdevops}}
-    \label{fig:def_devops}
-\end{figure}
+\subsection{Considerazioni}
+Nonostante la metodologia appena introdotta e utilizzata nel contesto del progetto risulti molto conveniente, può presentare alcuni svantaggi se analizzata su punti specifici.\\
+Ad esempio il \textbf{cloud computing}, strumento di cui parleremo anche più avanti nel capitolo 2, ci permette di avere a disposizione hardware già configurato noleggiato da terzi. Quindi sfruttando le potenzialità della rete non dobbiamo configurarlo in primo luogo noi.\cite{cloud}\\ Dal punto di vista economico è molto vantaggioso siccome il costo è basato solo sul consumo, però ci sarebbe da considerare tutto ciò che riguarda le macchine noleggiate in sè. Essendo già preconfigurate a livello di sistema dall'azienda erogatrice, non abbiamo il potere di personalizzarle appieno e dovremmo accettare questa limitazione con tutte le conseguenze del merito.\\
+Per quanto riguarda invece le altre tecnologie che ruotano attorno a \textbf{DevOps}, quelle utilizzate durante il progetto sono state un susseguirsi di alzamento del livello di astrazione man mano che durante la fase di studio si andava al passo successivo.\\
+C'è dunque da considerare che al raggiungimento di un certo strato, si possano perdere delle componenti a basso livello essendo implicite in una tecnologia più avanzata e strutturata. Il vantaggio di tutto ciò sta nel dover eseguire meno operazioni per gestire le risorse, esattamente come è avvenuto storicamente nell'evoluzione dei linguaggi di programmazione. D'altro canto, lo svantaggio resta nel minor controllo su determinati elementi che non sono più visibili come in precedenza.
 
-\subsection{Ciclo di vita dell'infrastruttura}
-Si intende in tal senso che l'obiettivo specifico fosse di comprendere e acquisire competenze sull'intero ciclo a partire dall'analisi dei requisiti, per passare poi alla progettazione delle specifiche necessarie fino ad arrivare all'implementazione finale del sistema.
 
 \subsection{Obiettivi tecnici}
-Come anticipato poco fa, a livello tecnico l'obiettivo principale era di costruire un'infrastruttura in grado di essere rilasciata attraverso il cloud e sulla quale fosse possibile rilasciare applicazioni basate su microservizi.\\
+Come anticipato, a livello tecnico l'obiettivo principale era di costruire un'infrastruttura in grado di essere rilasciata attraverso il cloud e sulla quale fosse possibile rilasciare applicazioni basate su microservizi.\\
+Dunque per fare ciò sono state sfruttate le conoscenze apprese durante il conseguimento degli obiettivi formativi.
+
 
 \section{IAC: definizione e vantaggi}
 La metodologia IAC(Infrastructure As Code), in italiano \textit{infrastruttura come codice}, è una strategia che punta a gestire l'intero ciclo di vita di un'infrastruttura mediante codice. Quindi non c'è bisogno di configurazione hardware fisica o strumenti interattivi esterni, è sufficiente uno o più linguaggi dichiarativi o di scripting e compilare correttamente dei file di definizione.\cite{iacdef} \\ 
@@ -130,6 +132,11 @@ Infine è stata poi rilasciata al suo interno un'applicazione a microservizi. \\
 Come da requisiti iniziali anche le successive modifiche all'applicazione potevano avvenire in automatico in regola con la CI/CD. \\
 \end{enumerate}
 
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{def_devops}
+    \caption{Rappresentazione grafica di come DevOps si ponga nell'intersezione tra sviluppo, garanzia di qualità e operazioni IT.) \cite{defdevops}}
+    \label{fig:def_devops}
+\end{figure}
 
 %-------------------------------------------------
 
@@ -490,12 +497,15 @@ Per quanto riguarda eventuali miglioramenti futuri, ciò che si potrebbe aggiung
 \begin{thebibliography}{00}
 %
 
-\bibitem{iacdef}
-Wikipedia, Infrastructure As Code. \url{https://it.wikipedia.org/wiki/Infrastructure_as_Code}
-
 \bibitem{defdevops}
 Wikipedia, DevOps. \url{https://it.wikipedia.org/wiki/DevOps}
 
+\bibitem{cloud}
+Ionos.it, I vantaggi del cloud computing. 2023 \url{https://www.ionos.it/digitalguide/server/know-how/i-vantaggi-del-cloud-computing/}
+
+
+\bibitem{iacdef}
+Wikipedia, Infrastructure As Code. \url{https://it.wikipedia.org/wiki/Infrastructure_as_Code}
 
 \bibitem{devopsloopimg}
 Shalb, What is DevOps and where is it applied? 2019.\url{https://shalb.com/blog/what-is-devops-and-where-is-it-applied/}
@@ -514,9 +524,6 @@ Wikipedia, Kubernetes. \url{https://it.wikipedia.org/wiki/Kubernetes}
 
 \bibitem{k8simg}
 Datafusionspecialists, Containerization and Cloud Mobility, 2019. \url{https://datafusionspecialists.com/solutions/containerization-and-cloud-mobility/}
-
-\bibitem{cloud}
-Ionos.it, I vantaggi del cloud computing. 2023 \url{https://www.ionos.it/digitalguide/server/know-how/i-vantaggi-del-cloud-computing/}
 
 \bibitem{terraformimg}
 Auth0, Community Developer Brings HashiCorp Terraform to Auth0, 2020. \url{https://auth0.com/blog/community-developer-brings-hashicorp-terraform-to-auth0/}
