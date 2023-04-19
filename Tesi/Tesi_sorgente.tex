@@ -522,6 +522,9 @@ Man mano che le tecnologie viste e i concetti aumentavano, il modo più efficien
 In questa fase l'unica difficoltà è stata definire accuratamente i casi d'uso da implementare successivamente ed eventualmente escluderne altri.\\
 L'approccio è stato intuitivamente andare ad analizzare i requisiti iniziali e da essi esportare i possibili casi d'uso che potevano verificarsi sul sistema, ovvero quelli mostrati nel capitolo 3 in figura 7. Nel resto della progettazione non vi sono state ulteriori criticità considerando la chiarezza dei requisiti ed essendo appena usciti dalla fase di studio con tutti i concetti carpiti.\\
 \item \textit{\textbf{Fase di implementazione.}}\\
+Inizialmente, vi è stata una scelta di implementazione per quanto riguarda il tipo di oggetto con cui sviluppare le molteplici pipeline.\\
+In \textbf{Jenkins} ci sono diversi modi per lavorare con le pipeline e un primo approccio utilizzato durante la fase di studio per poi testarlo in sede di implementazione è stato l'uso di uno script adibito a pipeline. Questo metodo di sviluppo è molto potente siccome è possibile definire tutti i vari blocchi in uno script unico all'interno di un file che verrà chiamato Jenkinsfile. Tuttavia, simulando una situazione reale, risulta difficile da mantenere all'interno di un team più ampio avendo più utenti che ci devono mettere le mani sopra.\\
+Dunque a risoluzione di questo problema è stato optato invece l'utilizzo di diversi progetti detti freestyle, ovvero dei job singoli ognuno con il proprio contenuti di azioni come descritto nel capitolo 4, allegando poi dei trigger di post-compilazione per regolare quale evento succede l'altro.\\
 
 
 
