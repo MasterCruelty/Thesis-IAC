@@ -369,17 +369,22 @@ kubectl get nodes
 \section{Sviluppo pipeline per il rilascio dei micro servizi e modifica di puntamenti nel sorgente}
 Una volta tirata su l'infrastruttura principale, è stato possibile in una seconda fase di implementazione andare a eseguire il rilascio finale dell'applicazione a microservizi citata in precedenza.
 \subsection{Definizione delle pipeline}
-L'applicazione era composta di quattro microservizi, il frontend e un api gateway.\\
-Per ognuno di questi è stata sviluppata una pipeline composta dai seguenti job:\\
+L'applicazione, oltre ai suoi quattro microservizi, comprendeva anche il frontend e un api gateway. Per ognuna di queste componenti è stata sviluppata una pipeline dedicata.\\
+In questo modo anche la gestione delle modifiche di ogni servizio è indipendente e isolata come i microservizi stessi. Questo va a garantire che nel momento in cui avviene un push su un repository, si vada a integrare solamente quelle modifiche senza intaccare il resto delle componenti dell'applicazione rimaste invariate.\\ \\ \\ \\ \\
+Ognuna era composta dai seguenti job:\\
 \begin{enumerate}
 \item \textit{Git clone.}\\
 Senza ripetersi, svolge un'azione identica al primo passo della pipeline per il codice Terraform.
 \item \textit{Build codice.}\\
-In questo step viene solamente compilato il codice in locale. Se non ci sono errori, si passa alla build dell'immagine Docker.
+In questo step viene solamente compilato il codice in locale. Se non ci sono errori, si passa alla build dell'immagine Docker.\\
+Come per la pipeline relativa al codice Terraform, è stato scelto di inserire un passo intermedio per la compilazione del codice così da bloccare il processo subito in questo punto nel caso vi siano errori rilevati nel codice o di altra natura.\\
 \item \textit{Build immagine.}\\
-Prima di tutto viene eseguito il login sul repository Docker privato. Successivamente a partire dal codice già compilato viene eseguita la build dell'immagine usando il relativo Dockerfile presente nel repository clonato. Oltre a ciò viene anche eseguito il versionamento dell'immagine in modo da poter effetuare eventuali rollback in futuro.
+Prima di tutto viene eseguito il login sul repository Docker privato. Questo per far si che le prossime operazioni vengano eseguite sul nostro repository e non su un altro ipoteticamente utilizzato da un altro utente DevOps che ha accesso alla nostra stessa macchina. Successivamente a partire dal codice già compilato viene eseguita la build dell'immagine usando il relativo Dockerfile presente nel repository clonato. Oltre a ciò viene anche eseguito il versionamento dell'immagine in modo da poter effetuare eventuali rollback in futuro.\\
+L'uso di un repository privato per le immagini Docker garantisce che anch'esse siano confidenziali e non accessibili pubblicamente, oltre al codice che è già contenuto all'interno di repository privati.\\
 \item \textit{Deploy k8s.}\\
-In quest'ultimo passo viene anche qui eseguito un login su Azure, ci si collega al cluster corretto e infine viene applicato il manifesto YAML presente sul repository. \\ \\ \\
+In quest'ultimo passo viene anche qui eseguito un login su Azure, ci si collega al cluster corretto e infine viene applicato il manifesto YAML presente sul repository.\\
+In particolare al primo deploy, viene semplicemente applicato il manifesto e creati i container. Per quanto riguarda invece il successivo rilascio delle modifiche, viene sfruttato il meccanismo di Kubernetes citato in precedenza facendo si che con un apposito comando, venga prima creato il container che utilizza l'immagine aggiornata e solo infine terminare il container vecchio.\\
+Facendo così, l'utente finale non avrà mai problemi di downtime durante l'utilizzo dell'applicazione, semplicemente ad un certo punto si ritroverà una nuova versione in tempo reale. \\ \\
 \end{enumerate}
 
 \begin{lstlisting}[caption={\\\textit{Frammento di codice relativo al versionamento e alla build dell'immagine.}}]
