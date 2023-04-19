@@ -511,6 +511,22 @@ Grazie a questo progetto è stato possibile conoscere e acquisire competenze su 
 Terminato il progetto, è stata realizzata un'infrastruttura che rispetta i requisiti e i vincoli imposti nel corso del tirocinio, seppur con piccole modifiche rispetto a quanto fatto in sede di progettazione.\\
 Durante la fase di implementazione è stato reso necessario il non utilizzo di Nexus per il repository Docker privato a causa di ostacoli tecnici deviando quindi su un normale Docker Hub privato per non sforare con i tempi.
 \end{itemize}
+\section{Problemi incontrati lungo il progetto e approcci utilizzati}
+Durante lo sviluppo del progetto sono stati incontrati diversi problemi, i quali sono stati affrontati con determinati approcci per risolverli e/o deviarli.\\ \\
+\begin{itemize}
+\item \textit{\textbf{Fase di studio.}}\\
+Nella fase di studio, come accennato anche in precedenza, il problema maggiore è stato comprendere il ruolo di ogni strumento nel contesto specifico in cui dovevano essere utilizzati. Questo ha fatto si che la fase iniziale di studio sia stata lenta per poi gradualmente accelerare verso la sua fine.\\
+L'approccio standard numero uno è stato leggere buona parte della documentazione ufficiale per capire i funzionamenti, eventualmente integrando queste informazioni sfruttando risorse sul web come ad esempio video molto approfonditi su YouTube.\cite{youtubek8s}\\
+Man mano che le tecnologie viste e i concetti aumentavano, il modo più efficiente per cercare di tenere il tutto coeso ed evitare confusione è stato continuare a farsi determinate domande come ad esempio: \\ \textit{Se con Docker posso creare e gestire container, ma con Kubernetes posso fare lo stesso, qual è la differenza fondamentale?} \\ \textit{Ora che so che su Azure c'è un servizio che mi garantisce un cluster Kubernetes pronto e operativo, come posso fare per definirlo, modificarlo o cancellarlo in automatico rispettando i requisiti?} \\
+\item \textit{\textbf{Fase di progettazione.}}\\
+In questa fase l'unica difficoltà è stata definire accuratamente i casi d'uso da implementare successivamente ed eventualmente escluderne altri.\\
+L'approccio è stato intuitivamente andare ad analizzare i requisiti iniziali e da essi esportare i possibili casi d'uso che potevano verificarsi sul sistema, ovvero quelli mostrati nel capitolo 3 in figura 7. Nel resto della progettazione non vi sono state ulteriori criticità considerando la chiarezza dei requisiti ed essendo appena usciti dalla fase di studio con tutti i concetti carpiti.\\
+\item \textit{\textbf{Fase di implementazione.}}\\
+
+
+
+\end{itemize}
+
 \section{miglioramenti}
 Per quanto riguarda eventuali miglioramenti futuri, ciò che si potrebbe aggiungere è un sistema di monitoraggio dell'intero sistema. Allo stato attuale il controllo e la gestione delle risorse viene eseguito manualmente da shell, ma si potrebbe invece implementare un sistema più sofisticato utilizzando qualche tool esterno come ad esempio Grafana.
 %
@@ -560,6 +576,8 @@ Wikipedia, Jenkins. \url{https://it.wikipedia.org/wiki/Jenkins_(software)}
 \bibitem{jenkinsimg}
 Slideshare, Jenkins Pipeline, 2019. \url{https://www.slideshare.net/pavan5780/jenkins-pipeline-164020728}
 
+\bibitem{youtubek8s}
+TechWorld with Nana, Kubernetes for Beginners, 2020. \url{https://www.youtube.com/watch?v=X48VuDVv0do}
 %
 %
 \end{thebibliography}
