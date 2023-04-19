@@ -22,6 +22,7 @@ variable "network_name" {
   description = "Name of the virtual network"
 }
 
+#variabile booleana per comunicare a Terraform di generare il suffisso se non esistente in ogni caso
 variable "generate_suffix" {
   default = true
 }
