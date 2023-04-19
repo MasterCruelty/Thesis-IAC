@@ -1,4 +1,8 @@
 #Definizione della risorsa di tipo cluster Kubernetes
+#  In particolare è stato definito il nome, il gruppo risorse, regione gografica,
+#  la dimensione delle macchine, l'abilitazione dell'autoscale, il numero minimo
+#  dei nodi e il numero massimo. Inoltre le credenziali sono state definite come 
+#  SystemAssigned, quindi vengono usate quelle in cui si è loggati sul sistema.
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                = "k8s-cluster-iac-${random_string.suffix.result}"
   location            = var.resource_group_location
@@ -26,6 +30,8 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 }
 
 #Definizione della subnet e rete virtuale entro cui collocare il cluster Kubernetes
+#  Non utilizzata nella versione finale, ma da tenere come approfondimento per capire come
+#  far passare il cluster nella rete di Azure senza andare su Internet.
 data "azurerm_subnet" "my_subnet" {
   name                 = var.subnet_name
   virtual_network_name = var.network_name
