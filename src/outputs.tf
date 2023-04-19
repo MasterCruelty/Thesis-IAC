@@ -5,6 +5,7 @@
 output "kubernetes_cluster_name" {
   value = azurerm_kubernetes_cluster.k8s.name
 }
+
 #Nome del gruppo risorse
 output "resource_group_name" {
   value = azurerm_kubernetes_cluster.k8s.resource_group_name
