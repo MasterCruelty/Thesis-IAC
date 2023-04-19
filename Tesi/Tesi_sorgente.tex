@@ -87,6 +87,7 @@
 Il progetto di tirocinio svolto è consistito nella definizione, rilascio e controllo di un'infrastruttura IAC.\\
 Questa piattaforma aveva il vincolo di dover essere rilasciata attraverso il cloud e avere la capacità di poter ospitare applicazioni a micro servizi. Inoltre doveva essere in grado di integrare e rilasciare le successive modifiche di questi microservizi in automatico senza ausilio di passi manuali.\\
 Tutto il lavoro svolto è ruotato attorno a ciò che viene definito come sviluppo DevOps, una metodologia che andremo a spiegare e discutere nei successivi paragrafi. \\
+Oltre a ciò, tutto lo sviluppo è stato pensato con l'obiettivo di simulare un'ambiente reale a tutti gli effetti.\\
 In questo capitolo introduttivo saranno descritti gli obiettivi formativi e tecnici del progetto, le fasi principali che sono state svolte, oltre a introdurre le metodologie utilizzate dando così una panoramica più ampia sul progetto e sui concetti che sono stati incontrati e approfonditi. 
 Verranno anche fatte alcune considerazioni su ciò che può comportare l'uso di determinati strumenti e soluzioni.\\
 In questo modo sarà più immediato richiamare alcuni concetti che useremo nei capitoli successivi.
@@ -523,7 +524,7 @@ In questa fase l'unica difficoltà è stata definire accuratamente i casi d'uso 
 L'approccio è stato intuitivamente andare ad analizzare i requisiti iniziali e da essi esportare i possibili casi d'uso che potevano verificarsi sul sistema, ovvero quelli mostrati nel capitolo 3 in figura 7. Nel resto della progettazione non vi sono state ulteriori criticità considerando la chiarezza dei requisiti ed essendo appena usciti dalla fase di studio con tutti i concetti carpiti.\\
 \item \textit{\textbf{Fase di implementazione.}}\\
 Inizialmente, vi è stata una scelta di implementazione per quanto riguarda il tipo di oggetto con cui sviluppare le molteplici pipeline.\\
-In \textbf{Jenkins} ci sono diversi modi per lavorare con le pipeline e un primo approccio utilizzato durante la fase di studio per poi testarlo in sede di implementazione è stato l'uso di uno script adibito a pipeline. Questo metodo di sviluppo è molto potente siccome è possibile definire tutti i vari blocchi in uno script unico all'interno di un file che verrà chiamato Jenkinsfile. Tuttavia, simulando una situazione reale, risulta difficile da mantenere all'interno di un team più ampio avendo più utenti che ci devono mettere le mani sopra.\\
+In \textbf{Jenkins} ci sono diversi modi per lavorare con le pipeline e un primo approccio utilizzato durante la fase di studio per poi testarlo in sede di implementazione è stato l'uso di uno script adibito a pipeline. Questo metodo di sviluppo è molto potente siccome è possibile definire tutti i vari blocchi in uno script unico all'interno di un file che verrà chiamato Jenkinsfile. Tuttavia, dovendo simulare una situazione reale, risulta difficile da mantenere all'interno di un team più ampio avendo più utenti che ci devono mettere le mani sopra.\\
 Dunque a risoluzione di questo problema è stato optato invece l'utilizzo di diversi progetti detti freestyle, ovvero dei job singoli ognuno con il proprio contenuti di azioni come descritto nel capitolo 4, allegando poi dei trigger di post-compilazione per regolare quale evento succede l'altro.\\
 
 
