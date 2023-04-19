@@ -525,8 +525,14 @@ L'approccio è stato intuitivamente andare ad analizzare i requisiti iniziali e 
 \item \textit{\textbf{Fase di implementazione.}}\\
 Inizialmente, vi è stata una scelta di implementazione per quanto riguarda il tipo di oggetto con cui sviluppare le molteplici pipeline.\\
 In \textbf{Jenkins} ci sono diversi modi per lavorare con le pipeline e un primo approccio utilizzato durante la fase di studio per poi testarlo in sede di implementazione è stato l'uso di uno script adibito a pipeline. Questo metodo di sviluppo è molto potente siccome è possibile definire tutti i vari blocchi in uno script unico all'interno di un file che verrà chiamato Jenkinsfile. Tuttavia, dovendo simulare una situazione reale, risulta difficile da mantenere all'interno di un team più ampio avendo più utenti che ci devono mettere le mani sopra.\\
-Dunque a risoluzione di questo problema è stato optato invece l'utilizzo di diversi progetti detti freestyle, ovvero dei job singoli ognuno con il proprio contenuti di azioni come descritto nel capitolo 4, allegando poi dei trigger di post-compilazione per regolare quale evento succede l'altro.\\
-
+Dunque a risoluzione di questo problema è stato optato invece l'utilizzo di diversi progetti detti freestyle, ovvero dei job singoli ognuno con il proprio contenuti di azioni come descritto nel capitolo 4, allegando poi dei trigger di post-compilazione per regolare quale evento succede l'altro.\\ \\
+Come accennato verso la fine del paragrafo 5.1, un altro problema riscontrato è stato quello di combinare la tecnologia \textbf{Nexus} con il cluster \textbf{Kubernetes}.\\
+Qui affrontiamo direttamente lo svantaggio dell'utilizzo di un servizio preconfezionato quale è \textbf{AKS(Azure Kubernetes Service)}. La criticità principale risiedeva nel fatto che il pull delle immagini da parte del cluster avveniva obbligatoriamente attraverso il protocollo HTTPS, mentre il repository ospitato su Nexus come opzione di default viaggiava in HTTP.\\
+Un primo approccio è stato quello di provare a forzare l'AKS a eseguire il pull mediante registro non sicuro, ma è stato abbastanza chiaro capire che questo non era possibile.\\
+Un secondo approccio è stato creare un certificato self-signed da applicare sul repository Docker così che fosse raggiungibile via HTTPS. Nonostante ciò, per come era preconfigurato il cluster, non c'era modo di farsi dare la fiducia su quel certificato al container runtime in esecuzione sotto \textbf{AKS}.\\
+Possiamo dire che i vantaggi di un servizio di questo genere sono andati a discapito di un eventuale bisogno di dover modificare la configurazione delle macchine.\\
+Ad esempio su un cluster Kubernetes nativo, una semplice soluzione poteva essere andare a modificare la configurazione di ogni nodo in modo che tutti si fidassero di tale certificato.\\
+Una volta aggirato l'ostacolo mediante l'uso di un normalissimo repository su Docker Hub, il resto dell'implementazione del sistema non ha avuto altre criticità rilevanti.\\ \\ \\ \\
 
 
 \end{itemize}
