@@ -332,7 +332,7 @@ resource "random_string" "suffix" {
 \end{lstlisting}
 
 
-\subsection{pipeline per la gestione delle modifiche}
+\subsection{Pipeline per la gestione delle modifiche}
 La pipeline è stata divisa in 3 job diversi:\\
 \begin{enumerate}
 \item \textit{Git clone.} \\
@@ -480,7 +480,7 @@ spec:
 Un'ulteriore modifica è stata effettuata ai file di proprietà di ogni microservizio per regolare le rotte interne al cluster, sempre utilizzando il nome dominio FQDN dei servizi come fatto nel gateway. Sempre negli stessi file è stata modificata la rotta per il collegamento al database in modo da far collegare il microservizio al container del database definito tramite Kubernetes.\\
 In questo modo, l'applicazione che prima era stata definita per essere eseguita e testata in un ambiente locale, ora ha le caratteristiche necessarie per essere eseguita sul cloud all'interno del cluster Kubernetes definito. \\ \\ 
 Giunti a questo punto, il sistema risulta completo, dunque se lo sviluppatore di questa applicazione dovesse apportare delle modifiche a uno qualunque dei microservizi che la compongono, verrebbero deployate in tempo reale nell'arco di 15 minuti totalmente in automatico seguendo le procedure descritte nei precedenti paragrafi. \\
-L'unico aspetto manuale che è doveroso considerare rientrerebbe nel caso in cui si volesse fare rollback a una versione precedente. In tal caso sarebbe necessario eseguire un comando dalla CLI di Kubernetes specificando la versione dell'immagine di cui eseguire il pull, creando così il nuovo container e eliminando quello basato sull'immagine contenente eventuali problemi. \\ \\ \\ \\ 
+L'unico aspetto manuale che è doveroso considerare rientrerebbe nel caso in cui si volesse fare rollback a una versione precedente. In tal caso sarebbe necessario eseguire un comando dalla CLI di Kubernetes specificando la versione dell'immagine di cui eseguire il pull, creando così il nuovo container e eliminando quello basato sull'immagine contenente eventuali problemi. \\ \\ \\ \\ \\ \\ \\  
 
 
 \begin{figure}[h]
@@ -499,20 +499,8 @@ L'unico aspetto manuale che è doveroso considerare rientrerebbe nel caso in cui
 	\includegraphics[width=1.0\textwidth]{app_micro3}
     \caption{Visualizzazione di tutti i servizi attivi per l'applicazione rilasciata.\\Come spiegato in precedenza, abbiamo solo due servizi esposti su internet, mentre gli altri 4 comunicano internamente al cluster e sono raggiungibili attraverso il gateway.}
     \label{fig:app_micro3}
-\end{figure}
+\end{figure} \leavevmode \\ \\ \\ \\ \\ \\
 
-\chapter{Conclusioni}
-\section{risultati raggiunti al termine}
-Al termine di questo progetto i risultati raggiunti sono stati diversi, li ritroviamo qui di seguito:\\
-\begin{itemize}
-\item \textit{Appreso competenze in ambito DevOps.}\\
-Nel corso del tirocinio è stato possibile approcciarsi da zero con questa metodologia di sviluppo, riuscendo a carpirne i vantaggi del suo utilizzo e a sviluppare nuove competenze.\\
-\item \textit{Appreso conoscenze su diverse tecnologie.}\\
-Grazie a questo progetto è stato possibile conoscere e acquisire competenze su molte tecnologie in breve tempo. In aggiunta al background accademico, tutto ciò ha arricchito molto il bagaglio di competenze informatiche.\\
-\item \textit{Realizzata un'infrastruttura fedele ai requisiti iniziali.}\\
-Terminato il progetto, è stata realizzata un'infrastruttura che rispetta i requisiti e i vincoli imposti nel corso del tirocinio, seppur con piccole modifiche rispetto a quanto fatto in sede di progettazione.\\
-Durante la fase di implementazione è stato reso necessario il non utilizzo di Nexus per il repository Docker privato a causa di ostacoli tecnici deviando quindi su un normale Docker Hub privato per non sforare con i tempi.
-\end{itemize}
 \section{Problemi incontrati lungo il progetto e approcci utilizzati}
 Durante lo sviluppo del progetto sono stati incontrati diversi problemi, i quali sono stati affrontati con determinati approcci per risolverli e/o deviarli.\\ \\
 \begin{itemize}
@@ -527,7 +515,7 @@ L'approccio è stato intuitivamente andare ad analizzare i requisiti iniziali e 
 Inizialmente, vi è stata una scelta di implementazione per quanto riguarda il tipo di oggetto con cui sviluppare le molteplici pipeline.\\
 In \textbf{Jenkins} ci sono diversi modi per lavorare con le pipeline e un primo approccio utilizzato durante la fase di studio per poi testarlo in sede di implementazione è stato l'uso di uno script adibito a pipeline. Questo metodo di sviluppo è molto potente siccome è possibile definire tutti i vari blocchi in uno script unico all'interno di un file che verrà chiamato Jenkinsfile. Tuttavia, dovendo simulare una situazione reale, risulta difficile da mantenere all'interno di un team più ampio avendo più utenti che ci devono mettere le mani sopra.\\
 Dunque a risoluzione di questo problema è stato optato invece l'utilizzo di diversi progetti detti freestyle, ovvero dei job singoli ognuno con il proprio contenuti di azioni come descritto nel capitolo 4, allegando poi dei trigger di post-compilazione per regolare quale evento succede l'altro.\\ \\
-Come accennato verso la fine del paragrafo 5.1, un altro problema riscontrato è stato quello di combinare la tecnologia \textbf{Nexus} con il cluster \textbf{Kubernetes}.\\
+Un altro problema riscontrato è stato quello di combinare la tecnologia \textbf{Nexus} con il cluster \textbf{Kubernetes}.\\
 Qui affrontiamo direttamente lo svantaggio dell'utilizzo di un servizio preconfezionato quale è \textbf{AKS(Azure Kubernetes Service)}. La criticità principale risiedeva nel fatto che il pull delle immagini da parte del cluster avveniva obbligatoriamente attraverso il protocollo HTTPS, mentre il repository ospitato su Nexus come opzione di default viaggiava in HTTP.\\
 Un primo approccio è stato quello di provare a forzare l'AKS a eseguire il pull mediante registro non sicuro, ma è stato abbastanza chiaro capire che questo non era possibile.\\
 Un secondo approccio è stato creare un certificato self-signed da applicare sul repository Docker così che fosse raggiungibile via HTTPS. Nonostante ciò, per come era preconfigurato il cluster, non c'era modo di farsi dare la fiducia su quel certificato al container runtime in esecuzione sotto \textbf{AKS}.\\
@@ -538,8 +526,24 @@ Una volta aggirato l'ostacolo mediante l'uso di un normalissimo repository su Do
 
 \end{itemize}
 
+
+
+\chapter{Conclusioni}
+\section{risultati raggiunti al termine}
+Al termine di questo progetto i risultati raggiunti sono stati diversi, li ritroviamo qui di seguito:\\
+\begin{itemize}
+\item \textit{Appreso competenze in ambito DevOps.}\\
+Nel corso del tirocinio è stato possibile approcciarsi da zero con questa metodologia di sviluppo, riuscendo a carpirne i vantaggi del suo utilizzo e a sviluppare nuove competenze.\\
+\item \textit{Appreso conoscenze su diverse tecnologie.}\\
+Grazie a questo progetto è stato possibile conoscere e acquisire competenze su molte tecnologie in breve tempo. In aggiunta al background accademico, tutto ciò ha arricchito molto il bagaglio di competenze informatiche.\\
+\item \textit{Realizzata un'infrastruttura fedele ai requisiti iniziali.}\\
+Terminato il progetto, è stata realizzata un'infrastruttura che rispetta i requisiti e i vincoli imposti nel corso del tirocinio, seppur con piccole modifiche rispetto a quanto fatto in sede di progettazione.\\
+Come accennato e approfondito al termine del capitolo 4, durante la fase di implementazione è stato reso necessario il non utilizzo di Nexus per il repository Docker privato a causa di ostacoli tecnici deviando quindi su un normale Docker Hub privato per non sforare con i tempi.
+\end{itemize}
+
 \section{miglioramenti}
-Per quanto riguarda eventuali miglioramenti futuri, ciò che si potrebbe aggiungere è un sistema di monitoraggio dell'intero sistema. Allo stato attuale il controllo e la gestione delle risorse viene eseguito manualmente da shell, ma si potrebbe invece implementare un sistema più sofisticato utilizzando qualche tool esterno come ad esempio Grafana.
+Per quanto riguarda eventuali miglioramenti futuri, ciò che si potrebbe aggiungere è un sistema di monitoraggio dell'intero sistema. Allo stato attuale il controllo e la gestione delle risorse viene eseguito manualmente da shell, ma si potrebbe invece implementare un sistema più sofisticato utilizzando qualche tool esterno come ad esempio Grafana.\\
+Un'ulteriore modifica può essere fatta per quanto riguarda la scelta del cloud provider, così da approfondire le differenze tra i diversi servizi e verificare se gli stessi problemi riscontrati in questo contesto, possono essere evitati o meno.
 %
 %			BIBLIOGRAFIA
 %
