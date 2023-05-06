@@ -136,15 +136,12 @@ In questa fase finale è stata implementata l'infrastruttura in funzione dei dis
 Infine è stata poi rilasciata al suo interno un'applicazione a microservizi. \\
 Come da requisiti iniziali anche le successive modifiche all'applicazione potevano avvenire in automatico in regola con la CI/CD. \\
 \end{enumerate}
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{def_devops}
     \caption{Rappresentazione grafica di come DevOps si ponga nell'intersezione tra sviluppo, garanzia di qualità e operazioni IT.) \cite{defdevops}}
     \label{fig:def_devops}
 \end{figure}
-
 %-------------------------------------------------
-
 \chapter{Fase di studio e analisi dei requisiti}
 \section{Tecnologie utilizzate}
 \begin{figure}[h]
@@ -153,7 +150,6 @@ Come da requisiti iniziali anche le successive modifiche all'applicazione poteva
     \caption{The DevOps infinity loop(ogni tecnologia utilizzata nel proprio settore) \cite{devopsloopimg}}
     \label{fig:tech_used}
 \end{figure}
-
 In questa figura è possibile osservare l'elenco delle tecnologie utilizzate, ognuna posta nel proprio settore di appartenenza lungo il ciclo infinito dello sviluppo DevOps.\cite{devopsloop}\\
 Questo ciclo parte dalla stesura del codice fino ad arrivare al suo monitoraggio per poi ricominciare da capo senza mai concludersi.\\
 Sul settore del deploy notiamo \textbf{Azure} che è il cloud provider scelto durante la fase di studio, \textbf{Terraform} per la vera e propria infrastruttura a livello di codice e \textbf{Docker} per la sua funzionalità nella creazione di container.\\
@@ -166,29 +162,23 @@ Docker è un software progettato per permettere di eseguire applicazioni in ambi
 In particolare questi container non sono altro che delle applicazioni "virtualizzate" che condividono il kernel del sistema operativo della macchina che li ospita.\\
 Il vantaggio principale nell'utilizzo di Docker risiede nel fatto che sviluppando a piccoli servizi indipendenti rispetto a un'applicazione monolitica tradizionale, nel momento in cui un servizio dovesse andare offline, il resto dell'applicazione sarebbe ancora disponibile. Al contrario con un metodo tradizionale, tutto il sistema crollerebbe in una volta sola.\\
 Nel contesto del progetto Docker è stato usato direttamente solo per il versionamento delle immagini dei microservizi. È stato invece usato in modo implicito e indiretto all'interno di Kubernetes. \\ 
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{docker}
     \caption{Esempio di rappresentazione di alcuni container rispetto al kernel del sistema operativo della macchina ospitante. \cite{dockerimg}}
     \label{fig:docker}
 \end{figure}
-
 \subsection{Kubernetes}
 Kubernetes, anche chiamata k8s, è una piattaforma open source che automatizza le operazioni sui container. Grazie ad essa vengono eliminati molti dei processi manuali coinvolti nel deploy di applicazioni in container. \\
 Questa caratteristica viene chiamata orchestrazione, dunque non è più necessario manipolare i container a mano con diversi comandi Docker, ma è sufficiente scrivere un manifesto in codice formato YAML. In questo file vengono definite le specifiche del container e ogni volta che dovrà essere modificato basterà modificare il codice e successivamente applicare di nuovo il file. Il container stesso viene posto all'interno di un oggetto a un livello più alto di atrazione chiamato pod, il quale può essere considerato come una scatola che al suo interno contiene il container e le informazioni che lo definiscono.\\
 Questa è una tecnologia che funziona in cluster, quindi ho gruppi di nodi su cui sono in esecuzioni dei container e Kubernetes aiuta a gestirli in modo facile ed efficiente attraverso l'orchestrazione.\\
 K8s si pone a un livello d'astrazione più alto rispetto a Docker e i nodi all'interno del cluster contengono già al loro interno un container runtime.\cite{kubernetes}\\ 
 Un'ulteriore vantaggio legato a Kubernetes risiede nei suoi meccanismi di autoscale sia orizzontale che verticale oltre che a tecniche di scheduling interne, così da garantire che i servizi delle applicazioni siano sempre disponibili. Dunque, se combinata con il cloud, la potenza di questa tecnologia viene amplificata ulteriormente potendo deployare anche in diverse aree geografiche per minimizzare ancor più la probabilità di avere dei downtime.\\
-
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{k8s}
     \caption{Una rappresentazione grafica di un cluster Kubernetes. \cite{k8simg}}
     \label{fig:k8s}
 \end{figure}
-
 Ad esempio nella figura 3 si può notare che il cluster è configurato con quattro nodi, uno master e tre worker. All'interno del master vi sono tutte le componenti di sistema di Kubernetes, mentre sui nodi worker risiedono i microservizi deployati. Il contenuto dei manifesti YAML viene comunicato al nodo master che successivamente va a schedulare i container in modo appropriato sui vari nodi.
-
 \subsection{Azure}
 Nel corso della fase di studio, tra le varie alternative possibili è stato scelto Azure come cloud provider su cui fare affidamento.\\
 I vantaggi di usare il cloud sono molteplici ma quello principale è il non bisogno di costruirsi un proprio datacenter privato acquistando hardware e gestendolo privatamente, ma noleggiandolo da società terze sfruttando la rete.\cite{cloud}\\
@@ -201,30 +191,25 @@ az aks create \
   --name <nome-cluster> \
   --node-count <n> \
 \end{lstlisting}
-
 \subsection{Terraform}
 Si tratta di una tecnologia di automazione dotata di un proprio linguaggio dichiarativo HCL(Hashicorp Configuration Language), con la quale è possibile creare, modificare e eventualmente distruggere risorse descritte nel codice.\\
 Nel contesto del progetto Terraform è stato utilizzato per definire le specifiche del cluster Kubernetes come servizio di Azure. Una volta che è stato possibile definirlo tramite codice, non è stato più necessario andarlo a creare attraverso Azure stesso, ma semplicemente facendo compilare e applicare il codice. \\ \\ \\ \\ \\ \\ \\ \\
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{terraform}
     \caption{Raffigurazione di come Terraform possa essere usato con diversi tipi di servizi e differenti provider. \cite{terraformimg}}
     \label{fig:terraform}
 \end{figure}
-
 \subsection{Jenkins}
 Questo è stato uno strumento fondamentale ai fini del progetto, nonché ponte di collegamento tra tutte le tecnologie introdotte finora. \\
 È un software open source di supporto allo sviluppo che permette facilmente l'integrazione continua e automatica nei rilasci del software.\cite{jenkins}\\
 Jenkins è stato utilizzato in questo progetto per costruire delle cosiddette pipeline, ovvero delle collezioni di eventi che succedono uno dopo l'altro. 
 In ogni pipeline prodotta vi sono quindi diversi blocchi di azioni che vengono eseguite tramite appositi script scritti in Bash. \\
 Ogni qualvolta viene fatta una modifica, un trigger viene attiva e una pipeline specifica viene eseguita in autonomia e senza bisogno di passi manuali. \\ \\ \\ \\ \\ \\ \\
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{jenkins}
     \caption{Rappresentazione grafica di una pipeline eseguita da Jenkins. \cite{jenkinsimg}}
     \label{fig:jenkins}
 \end{figure}
-
 \section{Requisiti}
 Richiamando in breve i requisiti e analizzandoli, l'infrastruttura finale doveva rispettare le seguenti richieste:\\
 \begin{enumerate}
@@ -239,10 +224,8 @@ Ora che abbiamo introdotto a sufficienza tutti gli strumenti utilizzati, è nece
 Ad esempio Terraform, Kubernetes e Azure sono stati collegati tra loro come se fossero un'entità unica. Kubernetes ci fornisce il controllo sui container, Azure un servizio per avere il cluster già pronto e sempre online e Terraform ci permette di creare la risorsa dal cloud scrivendo solo codice. \\
 Per concludere e realizzare effettivamente una soluzione di tipo IAC, infine l'utilizzo di Jenkins per definire la pipeline che va a rilasciare in automatico sul cloud l'infrastruttura definita da codice.\\
 La difficoltà principale nel fare ciò è stato capire a fondo che ruolo svolgeva ogni tecnologia così da sapere in che modo serviva per far funzionare al meglio lo strumento successivo.
-
 \chapter{Progettazione dell'infrastruttura}
 \section{Casi d'uso}
-
 \begin{figure}[h]
 	\includegraphics[width=0.7\textwidth]{casi_uso}
     \caption{Diagramma dei casi d'uso considerati in formato UML}
@@ -257,13 +240,11 @@ ipotizzando di non utilizzare Terraform o una tecnologia equivalente, l'alternat
 Anche se a prima vista, il tempo speso per la creazione può sembrare simile, c'è da considerare il tempo che sarebbe speso in una futura manutenzione con eventuali modifiche. In tal caso dovremmo andare manualmente a impartire comandi da linea di comando o dal portale, mentre invece utilizzando una tecnologia di automazione come Terraform, è sufficiente riprendere in mano il codice opportunamente versionato e modificare la componente desiderata.\\
 Se adesso consideriamo invece l'utilizzo di Terraform ma senza l'ausilio di una pipeline, anche in questo caso andremmo a investire maggior tempo poiché saremmo costretti manualmente a impartire comandi compilazione e esecuzione del codice scritto, al contrario eseguito in automatico con un'opportuna pipeline definita in primo luogo. \\
 \section{Definizione dell'infrastruttura}
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{disegno_struttura_infra}
     \caption{Disegno che definisce il funzionamento dell'intero sistema sviluppato.}
     \label{fig:disegno_struttura_infra}
 \end{figure}
-
 In figura 8 è presente il disegno realizzato all'inizio della fase di progettazione, nel quale è possibile notare come abbia diviso in tre macro aree la definizione dell'infrastruttura completa.\\
 A partire da sinistra abbiamo tutto ciò che riguarda il versionamento del codice. Alla base vi è un repository Git, il quale può essere quello che contiene il codice Terraform(\textit{e in questo caso specifico spenderemo qualche parola in più nel paragrafo successivo}) oppure uno dei repository che contiene il codice di uno dei microservizi che andranno ad essere deployati sopra il sistema.\\
 Per dare più chiarezza sull'utilizzo dei repository dei microservizi, essenzialmente tramite essi è stato preso il codice scritto dallo sviluppatore alla fonte e comr prima azione è stato definito all'interno del repository un manifesto in formato YAML per le specifiche del container compatibile con Kubernetes.\\
@@ -271,33 +252,27 @@ Nel momento in cui viene eseguito un push sul repository, in particolare sul ram
 Come prima cosa quindi viene eseguito un pull delle modifiche oppure eseguito direttamente il clone dell'intero repository. Successivamente il codice viene compilato, ne viene costruita e versionata l'immagine per il container, poi viene eseguito un push su un repository Docker privato e infine viene eseguito il deploy effettivo sul cluster Kubernetes, utilizzando il manifesto definito in precedenza.\\
 Il repository privato per le immagini è stato ospitato tramite Nexus che è una tecnologia dedicata a questo tipo di utilizzo.
 \subsection{Ulteriori dettagli progettuali}
-Ora che è stato presentato il disegno che rappresenta la definizione completa, andremo a considerare separatamente i casi d'uso. In particolare consideriamo la casistica in cui viene modificato solo il codice Terraform e quindi la pipeline dedicata allo IAC. Senza ulteriori dettagli invece, avendolo già spiegato, il caso in cui viene applicata una modifica sui microservizi con conseguente deploy. \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
-
+Ora che è stato presentato il disegno che rappresenta la definizione completa, andremo a considerare separatamente i casi d'uso. In particolare consideriamo la casistica in cui viene modificato solo il codice Terraform e quindi la pipeline dedicata allo IAC. Senza ulteriori dettagli invece, avendolo già spiegato, il caso in cui viene applicata una modifica sui microservizi con conseguente deploy. \\ \\ \\ \\ \\ \\ 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{modifica_terraform}
     \caption{Disegno che rappresenta il caso d'uso della gestione delle modifiche del codice Terraform con l'esecuzione della pipeline IAC.}
     \label{fig:modifica_terraform}
 \end{figure} 
-
-In figura 9 vi è un disegno progettuale realizzato per tutto ciò che ruota attorno all'infrastruttura definita come iAC.\\
+\newline In figura 9 vi è un disegno progettuale realizzato per tutto ciò che ruota attorno all'infrastruttura definita come iAC.\\
 In questo contesto non stiamo andando a rilasciare delle normali modifiche di microservizi sopra il sistema, ma stiamo considerando l'eventuale modifica dell'infrastruttura stessa definita come codice in termini di soluzione IAC.\\
 Nel momento in cui il codice Terraform viene modificato e si verifica un push sul repository, all'interno dell'intervallo di tempo definito, Jenkins attiva il trigger e la pipeline. In questa casistica viene solo eseguito lo script in Bash che va a compilare e eseguire il codice HCL di Terraform, causando l'aggiunta, la modifica oppure la distruzione di risorse.\\
-I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica dell'infrastruttura stessa combinata con l'utilizzo di una tecnologia di automazione come Terraform sono già stati affrontati nel paragrafo 3.1.1. Ma è bene sottolineare nuovamente come senza di essa non sarebbe possibile avere la stessa efficienza in termini di velocità di definizione, costruzione e manutenzione nel lungo periodo.  \\ \\ \\ \\ \\ \\ 
+I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica dell'infrastruttura stessa combinata con l'utilizzo di una tecnologia di automazione come Terraform sono già stati affrontati nel paragrafo 3.1.1. Ma è bene sottolineare nuovamente come senza di essa non sarebbe possibile avere la stessa efficienza in termini di velocità di definizione, costruzione e manutenzione nel lungo periodo.  \\ \\ \\ \\
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{push_modifica}
     \caption{Dettaglio progettuale per il deploy di nuove modifiche dei microservizi.}
     \label{fig:push_modifica}
 \end{figure}
-
-In Figura 10 vi è un disegno progettuale che invece tratta il rilascio automatico delle modifiche dei microservizi deployati sull'infrastruttura. Il processo che va ad eseguire le azioni necessarie per fare ciò è analogo a quanto descritto nel paragrafo 3.2 per la figura 8. Essenzialmente il disegno è molto simile, è stata ignorata tutta la parte IAC e tenuto conto solo delle pipeline di rilascio in ambito DevOps.\\
-
+\newline In Figura 10 vi è un disegno progettuale che invece tratta il rilascio automatico delle modifiche dei microservizi deployati sull'infrastruttura. Il processo che va ad eseguire le azioni necessarie per fare ciò è analogo a quanto descritto nel paragrafo 3.2 per la figura 8. Essenzialmente il disegno è molto simile, è stata ignorata tutta la parte IAC e tenuto conto solo delle pipeline di rilascio in ambito DevOps.\\
 \chapter{Implementazione dell'infrastruttura}
 \section{Codice Terraform e pipeline dedicata}
 La fase di implementazione di tutto il sistema progettato e descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo. \\
 Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.
-
 \subsection{Definizione via codice}
-
 All'interno dei sorgenti HCL sono state definite le specifiche che doveva avere il cluster Kubernetes di Azure. Nel dettaglio è stato deciso di quanti nodi si doveva comporre, la dimensione delle macchine e il numero massimo di pod che poteva sostenere ogni nodo. \\Inoltre è stata definita una risorsa locale di tipo stringa per generare un suffisso casuale in modo da evitare conflitti con eventuali risorse di nome identico già presenti sul cloud.\\
 È stato impostato l'autoscale sui nodi con un minimo di tre fino a un massimo di sei. Il numero massimo di pod è stato impostato a 30.\\
 Il numero di nodi e di pods è stato scelto in funzione dell'eventuale carico a cui poteva essere sottoposto il sistema. In questo contesto l'applicazione finale che doveva essere rilasciata aveva solamente 4 microservizi e il suo scopo era di elaborare e gestire dei quiz da colloquio tecnico aziendale. Ipotizzando un utilizzo non intensivo è stato ragionevole scegliere un basso numero di nodi a garantire che l'applicazione fosse online anche nel caso in cui uno di essi fosse andato offline, mentre il numero di pods era più che sufficiente a gestire il numero di eventuali repliche da distribuire sui tre nodi.\\
@@ -305,7 +280,6 @@ Le informazioni relative al gruppo risorse e la regione geografica sono impostat
 Allo stesso modo vi è un file sorgente chiamato \textit{'output'} atto a contenere tutte quelle informazioni che si intende recuperare rapidamente una volta creata e deployata la risorsa definita. In questo caso sono stati scelti i valori relativi al gruppo risorse e al nome del cluster creato, così da reperirli con un apposito comando.\\
 Un'ulteriore file \textit{provider} è necessario per definire e comunicare all'interprete quale provider intendiamo utilizzare in modo che durante l'inizializzazione dell'ambiente vengano installate le componenti necessarie a far eseguire il codice correttamente. Dunque in questo caso essendo Azure il nostro fornitore di servizi, si va a specificarlo in questo file dedicato, svolgendo un'operazione simile a un'importazione di libreria per un linguaggio standard.\\
 Qui di seguito può essere visionato il sorgente prodotto per il file main così da apprendere meglio la struttura del linguaggio dichiarativo implementato da Terraform e come nel dettaglio viene definita una risorsa e le sue specifiche.\\ \\ \\ \\ \\ \\
-
 \begin{lstlisting}[caption={\\\textit{Codice sorgente all'interno del file main.tf.\\ }}]
 #Definizione della risorsa di tipo cluster Kubernetes
 resource "azurerm_kubernetes_cluster" "k8s" {
@@ -338,8 +312,6 @@ resource "random_string" "suffix" {
   special = false
 } 
 \end{lstlisting}
-
-
 \subsection{Pipeline per la gestione delle modifiche}
 La pipeline è stata divisa in 3 job diversi:\\
 \begin{enumerate}
@@ -348,23 +320,19 @@ Il primo passo fa semplicemente il clone del repository previo cancellazione del
 L'eliminazione della cartella di lavoro è una scelta fatta spuntando un'apposita flag e risulta conveniente per assicurarsi che ogni volta venga eseguito un clone pulito di tutto il progetto onde evitare eventuali conflitti con file residui precedenti.\\
 \textbf{Jenkins} fa partire questo primo job solo in caso di modifiche apportate lato \textbf{Git} e effettua un controllo per verificarlo ogni 15 minuti tramite un cronjob definito tramite l'interfaccia web. \\
 L'intervallo di tempo scelto per eseguire un controllo sulle modifiche è stata una scelta di progetto. Se si fosse scelto di eseguirlo ogni minuto, in questo contesto specifico non ci sarebbero cambiamenti significativi avendo pochi servizi, ma nel caso in cui così non fosse, le prestazioni della macchina su cui è installato Jenkins ne risentirebbero. \\In un caso estremo avremmo che tutte le pipeline andrebbero in esecuzione contemporaneamente, causando un'eventuale esaurimento delle risorse computazionali e problemi nel rilascio. \\
-Dunque, per simulare una situazione reale, è stato scelto 15 minuti per avere la certezza di più rilasci nell'arco della giornata e minimizzando la probabilità di avere tutte le pipeline in esecuzione nello stesso momento.
-
+Dunque, per simulare una situazione reale, è stato scelto 15 minuti per avere la certezza di più rilasci nell'arco della giornata e minimizzando la probabilità di avere tutte le pipeline in esecuzione nello stesso momento.\\ \\ \\ \\ \\
 \item \textit{Build Terraform.} \\
 In questo passo intermedio viene effettuato un login su Azure per assicurarsi di essere autenticati con la sottoscrizione corretta. In questo modo se la macchina dovesse essere utilizzata anche da altri utenti si evita di andare a fare modifiche su macchine che risiedono su altre sottoscrizioni Azure controllate da altri DevOps.\\
 Fatto questo, viene effettuata la compilazione del codice e applicato allo stesso tempo, eseguendo eventualmente le azioni necessarie a modificare l'infrastruttura.\\
 La scelta di un passo intermedio prima del deploy effettivo è dovuta all'eventualità di errori nel codice, così da bloccare preventivamente la pipeline senza passare al blocco successivo.\\
-
 \item \textit{Deploy test.} \\
 In questo ultimo passo viene semplicemente testato che il cluster Kubernetes sia stato creato correttamente e che sia funzionante, rilasciando sopra di esso una piccola applicazione di test.\\
 Anche questa è stata una scelta presa durante lo sviluppo, poiché se questa applicazione minimale risulta attiva sul cluster, è garantito che il sistema stia funzionando correttamente dopo essere stato deployato nel passo precedente.
 Come già detto se il job relativo alla build del codice non viene concluso correttamente senza errori, la pipeline si ferma senza far cominciare quest'ultimo.\\
-Questo accade per ogni concatenazione, avendo impostato tramite un apposito flag che i trigger di post-compilazione si attivano solo se la compilazione del processo attualmente in esecuzione è stabile.\\
+Questo accade per ogni concatenazione, avendo impostato tramite un apposito flag che i trigger di post-compilazione si attivano solo se la compilazione del processo attualmente in esecuzione è stabile.\\ \\ \\ \\ \\ \\
 \end{enumerate}
-
 Le credenziali di accesso sono gestite tramite un sistema interno di \textbf{Jenkins} dove è possibile definirle comodamente per poi utilizzarle come variabili negli script \textbf{Bash}.\\
 Inoltre, per tenere traccia delle risorse attualmente attive, \textbf{Terraform} crea durante la prima esecuzione del codice un file di configurazione dello stato corrente, il quale viene aggiornato di volta in volta. In questo modo se si esegue due volte lo stesso codice, non viene creata due volte la risorsa.
-
 \begin{lstlisting}[caption={\\\textit{Frammento di codice relativo alla compilazione del codice Terraform.\\ Nelle ultime righe viene effettuato un collegamento con il cluster appena creato e lanciato un comando per visualizzare i nodi in modo da accertarsi che sia operativo.}}]
 az login -u $azure_user -p $azure_psw
 terraform init
@@ -375,16 +343,15 @@ cluster_name=$(terraform output kubernetes_cluster_name | cut -d '"' -f 2)
 az aks get-credentials --resource-group $rs_group --name $cluster_name
 kubectl get nodes
 \end{lstlisting}
-
 \section{Sviluppo pipeline per il rilascio dei micro servizi e modifica di puntamenti nel sorgente}
-Una volta tirata su l'infrastruttura principale, è stato possibile in una seconda fase di implementazione andare a eseguire il rilascio finale dell'applicazione a microservizi citata in precedenza.
+Una volta definita e resa operativa l'infrastruttura progettata, è stato possibile in una seconda fase di implementazione andare a eseguire il rilascio dell'applicazione a microservizi citata in precedenza come test conclusivo del funzionamento del sistema e del rispetto dei requisiti del progetto. \\ \\ \\
 \subsection{Definizione delle pipeline}
 L'applicazione, oltre ai suoi quattro microservizi, comprendeva anche il frontend e un api gateway. Per ognuna di queste componenti è stata sviluppata una pipeline dedicata.\\
-In questo modo anche la gestione delle modifiche di ogni servizio è indipendente e isolata come i microservizi stessi. Questo va a garantire che nel momento in cui avviene un push su un repository, si vada a integrare solamente quelle modifiche senza intaccare il resto delle componenti dell'applicazione rimaste invariate.\\ \\ \\ \\ \\
-Ognuna era composta dai seguenti job:\\
+In questo modo anche la gestione delle modifiche di ogni servizio è indipendente e isolata come i microservizi stessi. Questo va a garantire che nel momento in cui avviene un push su un repository, si vada a integrare solamente quelle modifiche senza intaccare il resto delle componenti dell'applicazione rimaste invariate.\\ \\
+Ogni pipeline era composta dai seguenti job singoli:\\
 \begin{enumerate}
 \item \textit{Git clone.}\\
-Senza ripetersi, svolge un'azione identica al primo passo della pipeline per il codice Terraform.
+Senza ripetersi, svolge un'azione identica al primo passo della pipeline per il codice Terraform.\\
 \item \textit{Build codice.}\\
 In questo step viene solamente compilato il codice in locale. Se non ci sono errori, si passa alla build dell'immagine Docker.\\
 Come per la pipeline relativa al codice Terraform, è stato scelto di inserire un passo intermedio per la compilazione del codice così da bloccare il processo subito in questo punto nel caso vi siano errori rilevati nel codice o di altra natura.\\
@@ -394,9 +361,8 @@ L'uso di un repository privato per le immagini Docker garantisce che anch'esse s
 \item \textit{Deploy k8s.}\\
 In quest'ultimo passo viene anche qui eseguito un login su Azure, ci si collega al cluster corretto e infine viene applicato il manifesto YAML presente sul repository.\\
 In particolare al primo deploy, viene semplicemente applicato il manifesto e creati i container. Per quanto riguarda invece il successivo rilascio delle modifiche, viene sfruttato il meccanismo di Kubernetes citato in precedenza facendo si che con un apposito comando, venga prima creato il container che utilizza l'immagine aggiornata e solo infine terminare il container vecchio.\\
-Facendo così, l'utente finale non avrà mai problemi di downtime durante l'utilizzo dell'applicazione, semplicemente ad un certo punto si ritroverà una nuova versione in tempo reale. \\ \\
+Facendo così, l'utente finale non avrà mai problemi di downtime durante l'utilizzo dell'applicazione, semplicemente ad un certo punto si ritroverà una nuova versione in tempo reale. \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
 \end{enumerate}
-
 \begin{lstlisting}[caption={\\\textit{Frammento di codice relativo al versionamento e alla build dell'immagine.}}]
 #login sul repository docker
 sudo docker login -u $docker_usr -p $docker_psw http://localhost:8083/repository/docker-hosted/
@@ -413,18 +379,20 @@ else
 fi
 sudo docker build -t $img .
 \end{lstlisting} 
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{pipeline}
     \caption{Una delle pipeline sviluppate vista dall'interfaccia web di Jenkins. Si possono vedere i quattro blocchi che la compongono per il rilascio delle modifiche del microservizio chiamato 'question'.}
     \label{fig:pipeline}
 \end{figure}
-
 \subsection{Modifica nel codice sorgente}
 Dopo aver sviluppato le pipeline, per poter rendere l'applicazione già sviluppata compatibile con il sistema finora costruito, si è reso necessario apportare alcune piccole modifiche ai puntamenti presenti nel codice sorgente.\\
 All'interno del servizio api gateway, sono state modificate tutte le rotte mettendo al loro posto il nome di dominio FQDN di ogni servizio definito nei manifesti per Kubernetes. Ad esempio se il microservizio si chiama \textit{question} ed è stato esposto sulla porta 8082, nella rotta viene inserito: \textit{http://question-service.interview-tool.svc.cluster.local:8082}\\ \\
-Per come era strutturata l'applicazione architetturalmente, solo il frontend e l'api gateway sono stati esposti su internet, mentre i quattro microservizi comunicavano tra loro internamente al cluster ed erano raggiungibili dall'esterno solamente passando attraverso il gateway.\\ \\ \\ \\ \\ \\
-\begin{lstlisting}[caption={\\\textit{Manifesto YAML definito per uno dei quattro microservizi chiamato user.\\ Nella prima parte è definito un oggetto di tipo deployment che presenta le specifiche del container, a partire dal nome, namespace fino all'immagine che dovrà esserci montata sopra.\\ Sempre sul deployment sono stati definiti anche dei volumi per montare delle chiavi necessarie per il microservizio, oltre a delle variabili d'ambiente per richiamare il database.\\ Nella seconda parte del manifesto è definito un oggetto di tipo service per esporre sulla porta 8080.}}]
+Per come era strutturata l'applicazione architetturalmente, solo il frontend e l'api gateway sono stati esposti su internet, mentre i quattro microservizi comunicavano tra loro internamente al cluster ed erano raggiungibili dall'esterno solamente passando attraverso il gateway.\\
+Qui di seguito ho posizionato uno dei manifesti in formato YAML definito per uno dei quattro microservizi chiamato user.\\ 
+Nella prima parte è definito un oggetto di tipo deployment che presenta le specifiche del container, a partire dal nome, namespace fino all'immagine che dovrà esserci montata sopra.\\ 
+Sempre sul deployment sono stati definiti anche dei volumi per montare delle chiavi necessarie per il microservizio, oltre a delle variabili d'ambiente per richiamare il database.\\ 
+Nella seconda parte del manifesto è definito un oggetto di tipo service per esporre sulla porta 8080. \\ \\ \\ \\ \\ \\
+\begin{lstlisting}[caption={\\\textit{Il manifesto YAML appena citato e descritto.}}]
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -489,33 +457,28 @@ Un'ulteriore modifica è stata effettuata ai file di proprietà di ogni microser
 In questo modo, l'applicazione che prima era stata definita per essere eseguita e testata in un ambiente locale, ora ha le caratteristiche necessarie per essere eseguita sul cloud all'interno del cluster Kubernetes definito. \\ \\ 
 Giunti a questo punto, il sistema risulta completo, dunque se lo sviluppatore di questa applicazione dovesse apportare delle modifiche a uno qualunque dei microservizi che la compongono, verrebbero deployate in tempo reale nell'arco di 15 minuti totalmente in automatico seguendo le procedure descritte nei precedenti paragrafi. \\
 L'unico aspetto manuale che è doveroso considerare rientrerebbe nel caso in cui si volesse fare rollback a una versione precedente. In tal caso sarebbe necessario eseguire un comando dalla CLI di Kubernetes specificando la versione dell'immagine di cui eseguire il pull, creando così il nuovo container e eliminando quello basato sull'immagine contenente eventuali problemi. \\ \\ \\ \\ \\ \\ \\  
-
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{app_micro}
     \caption{Schermata principale dell'applicazione una volta deployata con successo sull'infrastruttura sviluppata.}
     \label{fig:app_micro}
 \end{figure}
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{app_micro2}
     \caption{Visualizzazione dei container in esecuzione per l'applicazione rilasciata nel suo namespace specifico. \\Ogni microservizio ha un suo database indipendente.}
     \label{fig:app_micro2}
 \end{figure}
-
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{app_micro3}
     \caption{Visualizzazione di tutti i servizi attivi per l'applicazione rilasciata.\\Come spiegato in precedenza, abbiamo solo due servizi esposti su internet, mentre gli altri 4 comunicano internamente al cluster e sono raggiungibili attraverso il gateway.}
     \label{fig:app_micro3}
-\end{figure} \leavevmode \\ \\ \\ \\ \\ \\
-
+\end{figure} \leavevmode \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ 
 \section{Problemi incontrati lungo il progetto e approcci utilizzati}
 Durante lo sviluppo del progetto sono stati incontrati diversi problemi, i quali sono stati affrontati con determinati approcci per risolverli e/o deviarli.\\ \\
 \begin{itemize}
 \item \textit{\textbf{Fase di studio.}}\\
 Nella fase di studio, come accennato anche in precedenza, il problema maggiore è stato comprendere il ruolo di ogni strumento nel contesto specifico in cui dovevano essere utilizzati. Questo ha fatto si che la fase iniziale di studio sia stata lenta per poi gradualmente accelerare verso la sua fine.\\
 L'approccio standard numero uno è stato leggere buona parte della documentazione ufficiale per capire i funzionamenti, eventualmente integrando queste informazioni sfruttando risorse sul web come ad esempio video molto approfonditi su YouTube.\cite{youtubek8s}\\
-Man mano che le tecnologie viste e i concetti aumentavano, il modo più efficiente per cercare di tenere il tutto coeso ed evitare confusione è stato continuare a farsi determinate domande come ad esempio: \\ \textit{Se con Docker posso creare e gestire container, ma con Kubernetes posso fare lo stesso, qual è la differenza fondamentale?} \\ \textit{Ora che so che su Azure c'è un servizio che mi garantisce un cluster Kubernetes pronto e operativo, come posso fare per definirlo, modificarlo o cancellarlo in automatico rispettando i requisiti?} \\
+Man mano che le tecnologie viste e i concetti aumentavano, il modo più efficiente per cercare di tenere il tutto coeso ed evitare confusione è stato continuare a farsi determinate domande come ad esempio: \\ \textit{Se con Docker posso creare e gestire container, ma con Kubernetes posso fare lo stesso, qual è la differenza fondamentale?} \\ \textit{Ora che so che su Azure c'è un servizio che mi garantisce un cluster Kubernetes pronto e operativo, come posso fare per definirlo, modificarlo o cancellarlo in automatico rispettando i requisiti?} \\ \\ \\ \\ \\
 \item \textit{\textbf{Fase di progettazione.}}\\
 In questa fase l'unica difficoltà è stata definire accuratamente i casi d'uso da implementare successivamente ed eventualmente escluderne altri.\\
 L'approccio è stato intuitivamente andare ad analizzare i requisiti iniziali e da essi esportare i possibili casi d'uso che potevano verificarsi sul sistema, ovvero quelli mostrati nel capitolo 3 in figura 7. Nel resto della progettazione non vi sono state ulteriori criticità considerando la chiarezza dei requisiti ed essendo appena usciti dalla fase di studio con tutti i concetti carpiti.\\
@@ -530,12 +493,7 @@ Un secondo approccio è stato creare un certificato self-signed da applicare sul
 Possiamo dire che i vantaggi di un servizio di questo genere sono andati a discapito di un eventuale bisogno di dover modificare la configurazione delle macchine.\\
 Ad esempio su un cluster Kubernetes nativo, una semplice soluzione poteva essere andare a modificare la configurazione di ogni nodo in modo che tutti si fidassero di tale certificato.\\
 Una volta aggirato l'ostacolo mediante l'uso di un normalissimo repository su Docker Hub, il resto dell'implementazione del sistema non ha avuto altre criticità rilevanti.\\ \\ \\ \\
-
-
 \end{itemize}
-
-
-
 \chapter{Conclusioni}
 \section{risultati raggiunti al termine}
 Al termine di questo progetto i risultati raggiunti sono stati diversi, li ritroviamo qui di seguito:\\
@@ -548,7 +506,6 @@ Grazie a questo progetto è stato possibile conoscere e acquisire competenze su 
 Terminato il progetto, è stata realizzata un'infrastruttura che rispetta i requisiti e i vincoli imposti nel corso del tirocinio, seppur con piccole modifiche rispetto a quanto fatto in sede di progettazione.\\
 Come accennato e approfondito al termine del capitolo 4, durante la fase di implementazione è stato reso necessario il non utilizzo di Nexus per il repository Docker privato a causa di ostacoli tecnici deviando quindi su un normale Docker Hub privato per non sforare con i tempi.
 \end{itemize}
-
 \section{miglioramenti}
 Per quanto riguarda eventuali miglioramenti futuri, ciò che si potrebbe aggiungere è un sistema di monitoraggio dell'intero sistema. Allo stato attuale il controllo e la gestione delle risorse viene eseguito manualmente da shell, ma si potrebbe invece implementare un sistema più sofisticato utilizzando qualche tool esterno come ad esempio Grafana.\\
 Un'ulteriore modifica può essere fatta per quanto riguarda la scelta del cloud provider, così da approfondire le differenze tra i diversi servizi e verificare se gli stessi problemi riscontrati in questo contesto, possono essere evitati o meno.
