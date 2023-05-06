@@ -148,6 +148,7 @@ Come da requisiti iniziali anche le successive modifiche all'applicazione poteva
 \chapter{Fase di studio e analisi dei requisiti}
 \section{Tecnologie utilizzate}
 \begin{figure}[h]
+	\centering
 	\includegraphics[width=0.6\textwidth]{tech_used}
     \caption{The DevOps infinity loop(ogni tecnologia utilizzata nel proprio settore) \cite{devopsloopimg}}
     \label{fig:tech_used}
@@ -171,7 +172,6 @@ Nel contesto del progetto Docker è stato usato direttamente solo per il version
     \caption{Esempio di rappresentazione di alcuni container rispetto al kernel del sistema operativo della macchina ospitante. \cite{dockerimg}}
     \label{fig:docker}
 \end{figure}
-
 
 \subsection{Kubernetes}
 Kubernetes, anche chiamata k8s, è una piattaforma open source che automatizza le operazioni sui container. Grazie ad essa vengono eliminati molti dei processi manuali coinvolti nel deploy di applicazioni in container. \\
@@ -204,7 +204,7 @@ az aks create \
 
 \subsection{Terraform}
 Si tratta di una tecnologia di automazione dotata di un proprio linguaggio dichiarativo HCL(Hashicorp Configuration Language), con la quale è possibile creare, modificare e eventualmente distruggere risorse descritte nel codice.\\
-Nel contesto del progetto Terraform è stato utilizzato per definire le specifiche del cluster Kubernetes come servizio di Azure. Una volta che è stato possibile definirlo tramite codice, non è stato più necessario andarlo a creare attraverso Azure stesso, ma semplicemente facendo compilare e applicare il codice.
+Nel contesto del progetto Terraform è stato utilizzato per definire le specifiche del cluster Kubernetes come servizio di Azure. Una volta che è stato possibile definirlo tramite codice, non è stato più necessario andarlo a creare attraverso Azure stesso, ma semplicemente facendo compilare e applicare il codice. \\ \\ \\ \\ \\ \\ \\ \\
 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{terraform}
@@ -217,7 +217,7 @@ Questo è stato uno strumento fondamentale ai fini del progetto, nonché ponte d
 È un software open source di supporto allo sviluppo che permette facilmente l'integrazione continua e automatica nei rilasci del software.\cite{jenkins}\\
 Jenkins è stato utilizzato in questo progetto per costruire delle cosiddette pipeline, ovvero delle collezioni di eventi che succedono uno dopo l'altro. 
 In ogni pipeline prodotta vi sono quindi diversi blocchi di azioni che vengono eseguite tramite appositi script scritti in Bash. \\
-Ogni qualvolta viene fatta una modifica, un trigger viene attiva e una pipeline specifica viene eseguita in autonomia e senza bisogno di passi manuali.
+Ogni qualvolta viene fatta una modifica, un trigger viene attiva e una pipeline specifica viene eseguita in autonomia e senza bisogno di passi manuali. \\ \\ \\ \\ \\ \\ \\
 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{jenkins}
@@ -255,7 +255,7 @@ L'utente DevOps è in grado di eseguire push di eventuali modifiche di codice ai
 Prendendo in considerazione il caso d'uso legato al DevOps, è bene differenziare i concetti legati alla pipeline per il rilascio automatico delle modifiche con approccio DevOps e quella che invece è dedicata alla costruzione IAC. Nel primo caso andiamo a controllare periodicamente entro un certo intervallo di tempo se vi sono state modifiche e in tal caso, vengono integrate e deployate in automatico.\\ Nel secondo caso invece, la pipeline si occupa solamente di eseguire il codice definito in ambito IAC, quindi costruire e rendere operativa l'infrastruttura definita nel sorgente. Eseguendo queste operazioni all'interno di una pipeline dedicata, si ha il vantaggio di non dover fare tutta una serie di azioni in modo manuale, ma di rendere il tutto in automatico. Andando più nel dettaglio, se nel progetto non fosse stata utilizzata questa metodologia e non fosse stata dedicata una pipeline, il processo sarebbe stato il seguente:\\
 ipotizzando di non utilizzare Terraform o una tecnologia equivalente, l'alternativa sarebbe stata andare a definire le specifiche direttamente dal portale web del cloud provider scelto o tramite la sua linea di comando dedicata. \\
 Anche se a prima vista, il tempo speso per la creazione può sembrare simile, c'è da considerare il tempo che sarebbe speso in una futura manutenzione con eventuali modifiche. In tal caso dovremmo andare manualmente a impartire comandi da linea di comando o dal portale, mentre invece utilizzando una tecnologia di automazione come Terraform, è sufficiente riprendere in mano il codice opportunamente versionato e modificare la componente desiderata.\\
-Se adesso consideriamo invece l'utilizzo di Terraform ma senza l'ausilio di una pipeline, anche in questo caso andremmo a investire maggior tempo poiché saremmo costretti manualmente a impartire comandi compilazione e esecuzione del codice scritto, al contrario eseguito in automatico con un'opportuna pipeline definita in primo luogo.
+Se adesso consideriamo invece l'utilizzo di Terraform ma senza l'ausilio di una pipeline, anche in questo caso andremmo a investire maggior tempo poiché saremmo costretti manualmente a impartire comandi compilazione e esecuzione del codice scritto, al contrario eseguito in automatico con un'opportuna pipeline definita in primo luogo. \\
 \section{Definizione dell'infrastruttura}
 
 \begin{figure}[h]
@@ -264,30 +264,32 @@ Se adesso consideriamo invece l'utilizzo di Terraform ma senza l'ausilio di una 
     \label{fig:disegno_struttura_infra}
 \end{figure}
 
-È possibile notare che l'infrastruttura è divisa in tre macro aree.\\
-A partire da sinistra abbiamo tutto ciò che riguarda il versionamento del codice. Alla base vi è un repository Git, il quale può essere quello che contiene il codice Terraform oppure uno dei repository che contiene il codice di uno dei microservizi che andranno ad essere deployati sopra il sistema.\\
-Per dare più chiarezza sull'utilizzo dei repository dei microservizi, essenzialmente tramite essi è stato preso il codice dello sviluppatore alla fonte ed è stato inizialmente definito al loro interno un manifesto in formato YAML per le specifiche del container.\\
+In figura 8 è presente il disegno realizzato all'inizio della fase di progettazione, nel quale è possibile notare come abbia diviso in tre macro aree la definizione dell'infrastruttura completa.\\
+A partire da sinistra abbiamo tutto ciò che riguarda il versionamento del codice. Alla base vi è un repository Git, il quale può essere quello che contiene il codice Terraform(\textit{e in questo caso specifico spenderemo qualche parola in più nel paragrafo successivo}) oppure uno dei repository che contiene il codice di uno dei microservizi che andranno ad essere deployati sopra il sistema.\\
+Per dare più chiarezza sull'utilizzo dei repository dei microservizi, essenzialmente tramite essi è stato preso il codice scritto dallo sviluppatore alla fonte e comr prima azione è stato definito all'interno del repository un manifesto in formato YAML per le specifiche del container compatibile con Kubernetes.\\
 Nel momento in cui viene eseguito un push sul repository, in particolare sul ramo master, viene attivato un trigger da Jenkins, il quale farà partire l'esecuzione della pipeline collegata.\\
-Come prima cosa quindi viene eseguito un pull delle modifiche o direttamente clonato l'intero repository. Successivamente il codice viene compilato, ne viene costruita e versionata l'immagine per il container, poi viene eseguito un push su un repository Docker privato e infine viene eseguito il deploy effettivo sul cluster Kubernetes, utilizzando il manifesto scritto in primo luogo.\\
+Come prima cosa quindi viene eseguito un pull delle modifiche oppure eseguito direttamente il clone dell'intero repository. Successivamente il codice viene compilato, ne viene costruita e versionata l'immagine per il container, poi viene eseguito un push su un repository Docker privato e infine viene eseguito il deploy effettivo sul cluster Kubernetes, utilizzando il manifesto definito in precedenza.\\
 Il repository privato per le immagini è stato ospitato tramite Nexus che è una tecnologia dedicata a questo tipo di utilizzo.
 \subsection{Ulteriori dettagli progettuali}
-Ora che è stato presentato il disegno che rappresenta la definizione completa, andremo a considerare separatamente i casi d'uso. In particolare consideriamo la casistica in cui viene modificato solo il codice Terraform e senza ulteriori dettagli avendolo già spiegato, il caso in cui viene applicata una modifica sui microservizi con conseguente deploy. \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
+Ora che è stato presentato il disegno che rappresenta la definizione completa, andremo a considerare separatamente i casi d'uso. In particolare consideriamo la casistica in cui viene modificato solo il codice Terraform e quindi la pipeline dedicata allo IAC. Senza ulteriori dettagli invece, avendolo già spiegato, il caso in cui viene applicata una modifica sui microservizi con conseguente deploy. \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{modifica_terraform}
-    \caption{Dettaglio progettuale per la sola modifica delle specifiche del sistema.}
+    \caption{Disegno che rappresenta il caso d'uso della gestione delle modifiche del codice Terraform con l'esecuzione della pipeline IAC.}
     \label{fig:modifica_terraform}
 \end{figure} 
 
-Richiamando il concetto nel precedente paragrafo, nel momento in cui il codice Terraform viene modificato e si verifica un push sul repository, Jenkins attiva il trigger e la pipeline specifica. In questa casistica viene solo eseguito lo script in Bash che va a compilare e eseguire il codice HCL, causando l'aggiunta, la modifica oppure la distruzione di risorse.\\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
-
+In figura 9 vi è un disegno progettuale realizzato per tutto ciò che ruota attorno all'infrastruttura definita come iAC.\\
+In questo contesto non stiamo andando a rilasciare delle normali modifiche di microservizi sopra il sistema, ma stiamo considerando l'eventuale modifica dell'infrastruttura stessa definita come codice in termini di soluzione IAC.\\
+Nel momento in cui il codice Terraform viene modificato e si verifica un push sul repository, all'interno dell'intervallo di tempo definito, Jenkins attiva il trigger e la pipeline. In questa casistica viene solo eseguito lo script in Bash che va a compilare e eseguire il codice HCL di Terraform, causando l'aggiunta, la modifica oppure la distruzione di risorse.\\
+I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica dell'infrastruttura stessa combinata con l'utilizzo di una tecnologia di automazione come Terraform sono già stati affrontati nel paragrafo 3.1.1. Ma è bene sottolineare nuovamente come senza di essa non sarebbe possibile avere la stessa efficienza in termini di velocità di definizione, costruzione e manutenzione nel lungo periodo.  \\ \\ \\ \\ \\ \\ 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{push_modifica}
     \caption{Dettaglio progettuale per il deploy di nuove modifiche dei microservizi.}
     \label{fig:push_modifica}
 \end{figure}
 
-Sulla figura 10 non vi è molto altro da aggiungere, fondamentalmente tratta lo stesso processo spiegato per la figura 8, tolta tutta la parte legata a Terraform e concentrandosi solo sul deploy di nuove modifiche.
+In Figura 10 vi è un disegno progettuale che invece tratta il rilascio automatico delle modifiche dei microservizi deployati sull'infrastruttura. Il processo che va ad eseguire le azioni necessarie per fare ciò è analogo a quanto descritto nel paragrafo 3.2 per la figura 8. Essenzialmente il disegno è molto simile, è stata ignorata tutta la parte IAC e tenuto conto solo delle pipeline di rilascio in ambito DevOps.\\
 
 \chapter{Implementazione dell'infrastruttura}
 \section{Codice Terraform e pipeline dedicata}
