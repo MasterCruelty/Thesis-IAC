@@ -214,9 +214,9 @@ Ogni qualvolta viene fatta una modifica, un trigger viene attiva e una pipeline 
 Richiamando in breve i requisiti e analizzandoli, l'infrastruttura finale doveva rispettare le seguenti richieste:\\
 \begin{enumerate}
 \item \textit{Deve essere realizzata tramite una soluzione IAC.}
-\item \textit{Deve essere rilasciata attraverso il cloud.}
+\item \textit{Deve essere rilasciata in automatico attraverso il cloud.}
 \item \textit{Deve essere in grado di ospitare sopra di essa applicazioni a microservizi.}
-\item \textit{Deve garantire che le modifiche a questi microservizi vengano integrate e deployate in automatico. }
+\item \textit{Deve garantire che le modifiche a questi microservizi vengano integrate e deployate in automatico.}
 \end{enumerate}
 \subsection{collegamenti tra le tecnologie}
 Si tratta di una delle parti più complesse svolte durante il tirocinio. Essenzialmente è stato un punto di transizione tra la fase di studio e la fase di progettazione.\\
@@ -225,13 +225,18 @@ Ad esempio Terraform, Kubernetes e Azure sono stati collegati tra loro come se f
 Per concludere e realizzare effettivamente una soluzione di tipo IAC, infine l'utilizzo di Jenkins per definire la pipeline che va a rilasciare in automatico sul cloud l'infrastruttura definita da codice.\\
 La difficoltà principale nel fare ciò è stato capire a fondo che ruolo svolgeva ogni tecnologia così da sapere in che modo serviva per far funzionare al meglio lo strumento successivo.
 \chapter{Progettazione dell'infrastruttura}
+\section{Lavoro svolto e fasi affrontate}
+Il lavoro svolto durante la fase di progettazione è stato diviso in diverse fasi distinte.\\
+Inizialmente è stata eseguita la definizione e modellazione dei casi d'uso considerandone un sottoinsieme rispetto a quelli potenziali, così da garantire di rimanere entro le tempistiche imposte dal tirocinio.\\
+Successivamente, dopo aver compreso il ruolo di ogni attore/tecnologia, è stata modellata e definita la struttura dell'intera infrastruttura sulla base dei casi d'uso considerati. Nell'arco di questa fase progettuale è stato accentrato soprattutto il ruolo delle metodologie DevOps e IAC in modo da averle fissate e integrate. Oltre a ciò sono stati ulreriormente modellati i casi d'uso approfondendo gli eventi che si vedono susseguire e le componenti coinvolte. \\ \\ \\ \\ \\
 \section{Casi d'uso}
 \begin{figure}[h]
+	\centering
 	\includegraphics[width=0.7\textwidth]{casi_uso}
     \caption{Diagramma dei casi d'uso considerati in formato UML}
     \label{fig:casi_uso}
-\end{figure}
-In questo diagramma sono rappresentati graficamente i casi d'uso considerati durante la progettazione ai fini dell'implementazione finale.\\
+\end{figure} 
+In figura 7 troviamo il diagramma realizzato in formato UML per rappresentare l'insieme dei casi d'uso considerati nelle fasi preliminari di progettazione.\\
 Il sistema è utilizzabile quindi da due tipologie di utenti, chi si occupa della parte DevOps vera e propria e chi invece è lo sviluppatore dell'applicazione a microservizi che andrà ad essere deployata sull'infrastruttura.\\
 L'utente DevOps è in grado di eseguire push di eventuali modifiche di codice ai microservizi, ma ha anche i privilegi di amministrazione per modificare il codice lato Terraform o aggiornare delle componenti nelle pipeline. Lo sviluppatore invece può utilizzare l'infrastruttura solo indirettamente eseguendo push di codice innescando i trigger rispettivi. Ognuna di queste azioni attiva uno specifico job jenkins che farà eseguire una pipeline.\\
 \subsection{Il ruolo della IAC nel progetto}
@@ -245,23 +250,23 @@ Se adesso consideriamo invece l'utilizzo di Terraform ma senza l'ausilio di una 
     \caption{Disegno che definisce il funzionamento dell'intero sistema sviluppato.}
     \label{fig:disegno_struttura_infra}
 \end{figure}
-In figura 8 è presente il disegno realizzato all'inizio della fase di progettazione, nel quale è possibile notare come abbia diviso in tre macro aree la definizione dell'infrastruttura completa.\\
+In figura 8 è presente il disegno progettuale che definisce la struttura dell'infrastruttura, il quale è stato realizzato successivamente alla modellazione dei casi d'uso considerati. Qui è possibile notare come abbia diviso in tre macro aree la struttura principale del sistema, dalla gestione del codice all'integrazione delle modifiche fino ad arrivare al deploy e resa operativa dei servizi.\\
 A partire da sinistra abbiamo tutto ciò che riguarda il versionamento del codice. Alla base vi è un repository Git, il quale può essere quello che contiene il codice Terraform(\textit{e in questo caso specifico spenderemo qualche parola in più nel paragrafo successivo}) oppure uno dei repository che contiene il codice di uno dei microservizi che andranno ad essere deployati sopra il sistema.\\
-Per dare più chiarezza sull'utilizzo dei repository dei microservizi, essenzialmente tramite essi è stato preso il codice scritto dallo sviluppatore alla fonte e comr prima azione è stato definito all'interno del repository un manifesto in formato YAML per le specifiche del container compatibile con Kubernetes.\\
+Per dare più chiarezza sull'utilizzo dei repository dei microservizi, essenzialmente tramite essi è stato preso il codice scritto dallo sviluppatore alla fonte e come prima azione è stato definito all'interno del repository un manifesto in formato YAML per le specifiche del container compatibile con Kubernetes.\\
 Nel momento in cui viene eseguito un push sul repository, in particolare sul ramo master, viene attivato un trigger da Jenkins, il quale farà partire l'esecuzione della pipeline collegata.\\
-Come prima cosa quindi viene eseguito un pull delle modifiche oppure eseguito direttamente il clone dell'intero repository. Successivamente il codice viene compilato, ne viene costruita e versionata l'immagine per il container, poi viene eseguito un push su un repository Docker privato e infine viene eseguito il deploy effettivo sul cluster Kubernetes, utilizzando il manifesto definito in precedenza.\\
+Come prima azione quindi viene eseguito un pull delle modifiche oppure eseguito direttamente il clone dell'intero repository. Successivamente il codice viene compilato, ne viene costruita e versionata l'immagine per il container, poi viene eseguito un push su un repository Docker privato e infine viene eseguito il deploy effettivo sul cluster Kubernetes, utilizzando il manifesto definito in precedenza.\\
 Il repository privato per le immagini è stato ospitato tramite Nexus che è una tecnologia dedicata a questo tipo di utilizzo.
 \subsection{Ulteriori dettagli progettuali}
-Ora che è stato presentato il disegno che rappresenta la definizione completa, andremo a considerare separatamente i casi d'uso. In particolare consideriamo la casistica in cui viene modificato solo il codice Terraform e quindi la pipeline dedicata allo IAC. Senza ulteriori dettagli invece, avendolo già spiegato, il caso in cui viene applicata una modifica sui microservizi con conseguente deploy. \\ \\ \\ \\ \\ \\ 
+Ora che è stato presentato il disegno che rappresenta la definizione completa, andremo a considerare separatamente la modellazione eseguita sui casi d'uso. In particolare consideriamo la casistica in cui viene modificato solo il codice Terraform e quindi la pipeline dedicata allo IAC. Senza ulteriori dettagli invece, avendolo già spiegato, il caso in cui viene applicata una modifica sui microservizi con conseguente deploy. \\  
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{modifica_terraform}
     \caption{Disegno che rappresenta il caso d'uso della gestione delle modifiche del codice Terraform con l'esecuzione della pipeline IAC.}
     \label{fig:modifica_terraform}
 \end{figure} 
-\newline In figura 9 vi è un disegno progettuale realizzato per tutto ciò che ruota attorno all'infrastruttura definita come iAC.\\
+\newline In figura 9 vi è un disegno progettuale realizzato per tutto ciò che ruota attorno all'infrastruttura definita come IAC.\\
 In questo contesto non stiamo andando a rilasciare delle normali modifiche di microservizi sopra il sistema, ma stiamo considerando l'eventuale modifica dell'infrastruttura stessa definita come codice in termini di soluzione IAC.\\
 Nel momento in cui il codice Terraform viene modificato e si verifica un push sul repository, all'interno dell'intervallo di tempo definito, Jenkins attiva il trigger e la pipeline. In questa casistica viene solo eseguito lo script in Bash che va a compilare e eseguire il codice HCL di Terraform, causando l'aggiunta, la modifica oppure la distruzione di risorse.\\
-I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica dell'infrastruttura stessa combinata con l'utilizzo di una tecnologia di automazione come Terraform sono già stati affrontati nel paragrafo 3.1.1. Ma è bene sottolineare nuovamente come senza di essa non sarebbe possibile avere la stessa efficienza in termini di velocità di definizione, costruzione e manutenzione nel lungo periodo.  \\ \\ \\ \\
+I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica dell'infrastruttura stessa combinata con l'utilizzo di una tecnologia di automazione come Terraform sono già stati affrontati nel paragrafo 3.2.1. Ma è bene sottolineare nuovamente come senza di essa non sarebbe possibile avere la stessa efficienza in termini di velocità di definizione, costruzione e manutenzione nel lungo periodo.\\
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{push_modifica}
     \caption{Dettaglio progettuale per il deploy di nuove modifiche dei microservizi.}
@@ -270,7 +275,7 @@ I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica 
 \newline In Figura 10 vi è un disegno progettuale che invece tratta il rilascio automatico delle modifiche dei microservizi deployati sull'infrastruttura. Il processo che va ad eseguire le azioni necessarie per fare ciò è analogo a quanto descritto nel paragrafo 3.2 per la figura 8. Essenzialmente il disegno è molto simile, è stata ignorata tutta la parte IAC e tenuto conto solo delle pipeline di rilascio in ambito DevOps.\\
 \chapter{Implementazione dell'infrastruttura}
 \section{Codice Terraform e pipeline dedicata}
-La fase di implementazione di tutto il sistema progettato e descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo. \\
+La fase di implementazione, sulla base del sistema progettato descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo. \\
 Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.
 \subsection{Definizione via codice}
 All'interno dei sorgenti HCL sono state definite le specifiche che doveva avere il cluster Kubernetes di Azure. Nel dettaglio è stato deciso di quanti nodi si doveva comporre, la dimensione delle macchine e il numero massimo di pod che poteva sostenere ogni nodo. \\Inoltre è stata definita una risorsa locale di tipo stringa per generare un suffisso casuale in modo da evitare conflitti con eventuali risorse di nome identico già presenti sul cloud.\\
@@ -279,8 +284,9 @@ Il numero di nodi e di pods è stato scelto in funzione dell'eventuale carico a 
 Le informazioni relative al gruppo risorse e la regione geografica sono impostate come variabili all'interno di un altro sorgente e possono essere richiamate tramite il prefisso \textit{'var'}. In questo modo se dovesse essere necessario modificare questi valori, non andrò a toccare il sorgente main, ma cambierò solo le variabili contenute nel sorgente dedicato, così da rendere più mantenibile tutto il codice.\\
 Allo stesso modo vi è un file sorgente chiamato \textit{'output'} atto a contenere tutte quelle informazioni che si intende recuperare rapidamente una volta creata e deployata la risorsa definita. In questo caso sono stati scelti i valori relativi al gruppo risorse e al nome del cluster creato, così da reperirli con un apposito comando.\\
 Un'ulteriore file \textit{provider} è necessario per definire e comunicare all'interprete quale provider intendiamo utilizzare in modo che durante l'inizializzazione dell'ambiente vengano installate le componenti necessarie a far eseguire il codice correttamente. Dunque in questo caso essendo Azure il nostro fornitore di servizi, si va a specificarlo in questo file dedicato, svolgendo un'operazione simile a un'importazione di libreria per un linguaggio standard.\\
-Qui di seguito può essere visionato il sorgente prodotto per il file main così da apprendere meglio la struttura del linguaggio dichiarativo implementato da Terraform e come nel dettaglio viene definita una risorsa e le sue specifiche.\\ \\ \\ \\ \\ \\
-\begin{lstlisting}[caption={\\\textit{Codice sorgente all'interno del file main.tf.\\ }}]
+È a questo punto che è possibile toccare con mano tutti i vantaggi della metodologia IAC descritti nei capitoli precedenti. È stato possibile definire e costruire l'infrastruttura senza ausilio di hardware fisico, ma solamente progettandola a un livello alto d'astrazione e realizzandola con il solo uso di codice e oggetti astratti.\\
+Qui di seguito può essere visionato il sorgente prodotto per il file main così da apprendere meglio la struttura del linguaggio dichiarativo implementato da Terraform e come nel dettaglio viene definita una risorsa e le sue specifiche.\\ \\ \\ 
+\begin{lstlisting}[caption={\\\textit{Codice sorgente all'interno del file main.tf prodotto.\\ }}]
 #Definizione della risorsa di tipo cluster Kubernetes
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                = "k8s-cluster-iac-${random_string.suffix.result}"
