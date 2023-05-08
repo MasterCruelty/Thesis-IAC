@@ -240,17 +240,24 @@ In figura 7 troviamo il diagramma realizzato in formato UML per rappresentare l'
 Il sistema è utilizzabile quindi da due tipologie di utenti, chi si occupa della parte DevOps vera e propria e chi invece è lo sviluppatore dell'applicazione a microservizi che andrà ad essere deployata sull'infrastruttura.\\
 L'utente DevOps è in grado di eseguire push di eventuali modifiche di codice ai microservizi, ma ha anche i privilegi di amministrazione per modificare il codice lato Terraform o aggiornare delle componenti nelle pipeline. Lo sviluppatore invece può utilizzare l'infrastruttura solo indirettamente eseguendo push di codice innescando i trigger rispettivi. Ognuna di queste azioni attiva uno specifico job jenkins che farà eseguire una pipeline.\\
 \subsection{Il ruolo della IAC nel progetto}
-Prendendo in considerazione il caso d'uso legato al DevOps, è bene differenziare i concetti legati alla pipeline per il rilascio automatico delle modifiche con approccio DevOps e quella che invece è dedicata alla costruzione IAC. Nel primo caso andiamo a controllare periodicamente entro un certo intervallo di tempo se vi sono state modifiche e in tal caso, vengono integrate e deployate in automatico.\\ Nel secondo caso invece, la pipeline si occupa solamente di eseguire il codice definito in ambito IAC, quindi costruire e rendere operativa l'infrastruttura definita nel sorgente. Eseguendo queste operazioni all'interno di una pipeline dedicata, si ha il vantaggio di non dover fare tutta una serie di azioni in modo manuale, ma di rendere il tutto in automatico. Andando più nel dettaglio, se nel progetto non fosse stata utilizzata questa metodologia e non fosse stata dedicata una pipeline, il processo sarebbe stato il seguente:\\
-ipotizzando di non utilizzare Terraform o una tecnologia equivalente, l'alternativa sarebbe stata andare a definire le specifiche direttamente dal portale web del cloud provider scelto o tramite la sua linea di comando dedicata. \\
+Prendendo in considerazione il caso d'uso legato all'utente \textbf{DevOps}, è bene differenziare i concetti legati alla pipeline per il rilascio automatico delle modifiche con approccio DevOps e quella che invece è dedicata alla costruzione IAC. Nel primo caso andiamo a controllare periodicamente entro un certo intervallo di tempo se vi sono state modifiche e in tal caso, vengono integrate e deployate in automatico.\\ Nel secondo caso invece, la pipeline si occupa solamente di eseguire il codice definito in ambito \textbf{IAC}, quindi costruire e rendere operativa l'infrastruttura definita nel sorgente. Eseguendo queste operazioni all'interno di una pipeline dedicata, si ha il vantaggio di non dover fare tutta una serie di azioni in modo manuale, ma far si che il processo avvenga in modo automatico. Oltre alla velocità nel rilascio dell'infrastruttura, vi sono anche altri vantaggi legati alla riusabilità e manutenibilità, poiché con lo stesso codice è possibile riadattare lo stesso sistema rapidamente senza doverlo ricostruire da zero per ogni progetto di simile entità. \\
+Andando più nel dettaglio, se nel progetto non fosse stata utilizzata questa metodologia e non fosse stata dedicata una pipeline, il processo sarebbe stato il seguente:\\
+ipotizzando di non utilizzare \textbf{Terraform} o una tecnologia equivalente, l'alternativa sarebbe stata andare a definire le specifiche direttamente dal portale web del cloud provider scelto o tramite la sua linea di comando dedicata. \\
 Anche se a prima vista, il tempo speso per la creazione può sembrare simile, c'è da considerare il tempo che sarebbe speso in una futura manutenzione con eventuali modifiche. In tal caso dovremmo andare manualmente a impartire comandi da linea di comando o dal portale, mentre invece utilizzando una tecnologia di automazione come Terraform, è sufficiente riprendere in mano il codice opportunamente versionato e modificare la componente desiderata.\\
-Se adesso consideriamo invece l'utilizzo di Terraform ma senza l'ausilio di una pipeline, anche in questo caso andremmo a investire maggior tempo poiché saremmo costretti manualmente a impartire comandi compilazione e esecuzione del codice scritto, al contrario eseguito in automatico con un'opportuna pipeline definita in primo luogo. \\
+Se adesso consideriamo invece l'utilizzo di Terraform ma senza l'ausilio di una pipeline, anche in questo caso andremmo a investire maggior tempo poiché saremmo costretti manualmente a impartire comandi compilazione e esecuzione del codice scritto, al contrario eseguito in automatico con un'opportuna pipeline definita in primo luogo. \\ 
+\begin{figure}[h]
+	\includegraphics[width=1.0\textwidth]{iac_workflow}
+    \caption{Un esempio di ciclo di sviluppo per un'infrastruttura IAC.\cite{iac_img_workflow}}
+    \label{fig:push_modifica}
+\end{figure}
+\newline In figura 8 viene esplicitato il processo di sviluppo \textbf{IAC} nel suo ciclo continuo. Esattamente come in questa fase si è partiti dal definire le componenti che avrebbero composto l'infrastruttura, successivamente viene scritto il codice e eseguito il deploy dopo averlo fatto eseguire. Nel caso in cui il sistema rispetta i requisiti ed è quindi compatibile con il progetto in corso di sviluppo, possiamo utilizzare il sistema costruito. In caso contrario, possiamo fare un passo indietro tornando a ridiscutere i requisiti eseguendo le modifiche necessarie e ripetendo i passi appena descritti.\\
 \section{Definizione dell'infrastruttura}
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{disegno_struttura_infra}
     \caption{Disegno che definisce il funzionamento dell'intero sistema sviluppato.}
     \label{fig:disegno_struttura_infra}
 \end{figure}
-In figura 8 è presente il disegno progettuale che definisce la struttura dell'infrastruttura, il quale è stato realizzato successivamente alla modellazione dei casi d'uso considerati. Qui è possibile notare come abbia diviso in tre macro aree la struttura principale del sistema, dalla gestione del codice all'integrazione delle modifiche fino ad arrivare al deploy e resa operativa dei servizi.\\
+In figura 9 è presente il disegno progettuale che definisce la struttura dell'infrastruttura, il quale è stato realizzato successivamente alla modellazione dei casi d'uso considerati. Qui è possibile notare come abbia diviso in tre macro aree la struttura principale del sistema, dalla gestione del codice all'integrazione delle modifiche fino ad arrivare al deploy e resa operativa dei servizi.\\
 A partire da sinistra abbiamo tutto ciò che riguarda il versionamento del codice. Alla base vi è un repository Git, il quale può essere quello che contiene il codice Terraform(\textit{e in questo caso specifico spenderemo qualche parola in più nel paragrafo successivo}) oppure uno dei repository che contiene il codice di uno dei microservizi che andranno ad essere deployati sopra il sistema.\\
 Per dare più chiarezza sull'utilizzo dei repository dei microservizi, essenzialmente tramite essi è stato preso il codice scritto dallo sviluppatore alla fonte e come prima azione è stato definito all'interno del repository un manifesto in formato YAML per le specifiche del container compatibile con Kubernetes.\\
 Nel momento in cui viene eseguito un push sul repository, in particolare sul ramo master, viene attivato un trigger da Jenkins, il quale farà partire l'esecuzione della pipeline collegata.\\
@@ -263,7 +270,7 @@ Ora che è stato presentato il disegno che rappresenta la definizione completa, 
     \caption{Disegno che rappresenta il caso d'uso della gestione delle modifiche del codice Terraform con l'esecuzione della pipeline IAC.}
     \label{fig:modifica_terraform}
 \end{figure} 
-\newline In figura 9 vi è un disegno progettuale realizzato per tutto ciò che ruota attorno all'infrastruttura definita come IAC.\\
+\newline In figura 10 vi è un disegno progettuale realizzato per tutto ciò che ruota attorno all'infrastruttura definita come IAC.\\
 In questo contesto non stiamo andando a rilasciare delle normali modifiche di microservizi sopra il sistema, ma stiamo considerando l'eventuale modifica dell'infrastruttura stessa definita come codice in termini di soluzione IAC.\\
 Nel momento in cui il codice Terraform viene modificato e si verifica un push sul repository, all'interno dell'intervallo di tempo definito, Jenkins attiva il trigger e la pipeline. In questa casistica viene solo eseguito lo script in Bash che va a compilare e eseguire il codice HCL di Terraform, causando l'aggiunta, la modifica oppure la distruzione di risorse.\\
 I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica dell'infrastruttura stessa combinata con l'utilizzo di una tecnologia di automazione come Terraform sono già stati affrontati nel paragrafo 3.2.1. Ma è bene sottolineare nuovamente come senza di essa non sarebbe possibile avere la stessa efficienza in termini di velocità di definizione, costruzione e manutenzione nel lungo periodo.\\
@@ -272,7 +279,7 @@ I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica 
     \caption{Dettaglio progettuale per il deploy di nuove modifiche dei microservizi.}
     \label{fig:push_modifica}
 \end{figure}
-\newline In Figura 10 vi è un disegno progettuale che invece tratta il rilascio automatico delle modifiche dei microservizi deployati sull'infrastruttura. Il processo che va ad eseguire le azioni necessarie per fare ciò è analogo a quanto descritto nel paragrafo 3.2 per la figura 8. Essenzialmente il disegno è molto simile, è stata ignorata tutta la parte IAC e tenuto conto solo delle pipeline di rilascio in ambito DevOps.\\
+\newline In Figura 11 vi è un disegno progettuale che invece tratta il rilascio automatico delle modifiche dei microservizi deployati sull'infrastruttura. Il processo che va ad eseguire le azioni necessarie per fare ciò è analogo a quanto descritto nel paragrafo 3.2 per la figura 8. Essenzialmente il disegno è molto simile, è stata ignorata tutta la parte IAC e tenuto conto solo delle pipeline di rilascio in ambito DevOps.\\
 \chapter{Implementazione dell'infrastruttura}
 \section{Codice Terraform e pipeline dedicata}
 La fase di implementazione, sulla base del sistema progettato descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo. \\
@@ -391,12 +398,12 @@ sudo docker build -t $img .
     \label{fig:pipeline}
 \end{figure}
 
-In figura 11 è possibile vedere una delle pipeline sviluppate attraverso l'interfaccia grafica web di Jenkins. Come descritto nel paragrafo 4.2.1, ognuna di esse è stata sviluppata in modo da avere 4 job distinti che vengono avviati in successione se l'esecuzione del job precedente viene conclusa con successo. Da sinistra si inizia con il clone del repository fino ad arrivare a destra nell'ultimo processo, il quale provvede a deployare e concludere l'esecuzione dell'intera pipeline.\\
+In figura 12 è possibile vedere una delle pipeline sviluppate attraverso l'interfaccia grafica web di Jenkins. Come descritto nel paragrafo 4.2.1, ognuna di esse è stata sviluppata in modo da avere 4 job distinti che vengono avviati in successione se l'esecuzione del job precedente viene conclusa con successo. Da sinistra si inizia con il clone del repository fino ad arrivare a destra nell'ultimo processo, il quale provvede a deployare e concludere l'esecuzione dell'intera pipeline.\\
 \subsection{Modifica nel codice sorgente}
 Dopo aver sviluppato le pipeline, per poter rendere l'applicazione già sviluppata compatibile con il sistema finora costruito, si è reso necessario apportare alcune piccole modifiche ai puntamenti presenti nel codice sorgente.\\
-All'interno del servizio api gateway, sono state modificate tutte le rotte mettendo al loro posto il nome di dominio FQDN di ogni servizio definito nei manifesti per Kubernetes. Ad esempio se il microservizio si chiama \textit{question} ed è stato esposto sulla porta 8082, nella rotta viene inserito: \textit{http://question-service.interview-tool.svc.cluster.local:8082}\\ \\
-Per come era strutturata l'applicazione architetturalmente, solo il frontend e l'api gateway sono stati esposti su internet, mentre i quattro microservizi comunicavano tra loro internamente al cluster ed erano raggiungibili dall'esterno solamente passando attraverso il gateway.\\
-Qui di seguito ho posizionato uno dei manifesti in formato YAML definito per uno dei quattro microservizi chiamato user.\\ 
+All'interno del servizio api gateway, sono state modificate tutte le rotte mettendo al loro posto il nome di dominio FQDN di ogni servizio definito nei manifesti per Kubernetes. Ad esempio se il microservizio si chiama \textit{question} ed è stato esposto sulla porta 8082, nella rotta viene inserito: \textit{http://question-service.interview-tool.svc.cluster.local:8082}\\
+Per come era strutturata l'applicazione architetturalmente, solo il frontend e l'api gateway sono stati esposti su internet, mentre i quattro microservizi comunicavano tra loro internamente al cluster ed erano raggiungibili dall'esterno solamente passando attraverso il gateway.\\ \\
+Qui di seguito è posizionato uno dei manifesti in formato YAML definito per uno dei quattro microservizi chiamato user.\\ 
 Nella prima parte è definito un oggetto di tipo deployment che presenta le specifiche del container, a partire dal nome, namespace fino all'immagine che dovrà esserci montata sopra.\\ 
 Sempre sul deployment sono stati definiti anche dei volumi per montare delle chiavi necessarie per il microservizio, oltre a delle variabili d'ambiente per richiamare il database.\\ 
 Nella seconda parte del manifesto è definito un oggetto di tipo service per esporre sulla porta 8080. \\ \\ \\ \\ \\ \\
@@ -464,22 +471,22 @@ spec:
 Un'ulteriore modifica è stata effettuata ai file di proprietà di ogni microservizio per regolare le rotte interne al cluster, sempre utilizzando il nome dominio FQDN dei servizi come fatto nel gateway. Sempre negli stessi file è stata modificata la rotta per il collegamento al database in modo da far collegare il microservizio al container del database definito tramite Kubernetes.\\
 In questo modo, l'applicazione che prima era stata definita per essere eseguita e testata in un ambiente locale, ora ha le caratteristiche necessarie per essere eseguita sul cloud all'interno del cluster Kubernetes definito. \\ \\ 
 Giunti a questo punto, il sistema risulta completo, dunque se lo sviluppatore di questa applicazione dovesse apportare delle modifiche a uno qualunque dei microservizi che la compongono, verrebbero deployate in tempo reale nell'arco di 15 minuti totalmente in automatico seguendo le procedure descritte nei precedenti paragrafi. \\
-L'unico aspetto manuale che è doveroso considerare rientrerebbe nel caso in cui si volesse fare rollback a una versione precedente. In tal caso sarebbe necessario eseguire un comando dalla CLI di Kubernetes specificando la versione dell'immagine di cui eseguire il pull, creando così il nuovo container e eliminando quello basato sull'immagine contenente eventuali problemi. \\ \\ \\ \\ \\ \\ \\  
+L'unico aspetto manuale che è doveroso considerare rientrerebbe nel caso in cui si volesse fare rollback a una versione precedente. In tal caso sarebbe necessario eseguire un comando dalla CLI di Kubernetes specificando la versione dell'immagine di cui eseguire il pull, creando così il nuovo container e eliminando quello basato sull'immagine contenente eventuali problemi. \\ \\ \\ 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{app_micro}
     \caption{Schermata principale dell'applicazione una volta deployata con successo sull'infrastruttura sviluppata.}
     \label{fig:app_micro}
-\end{figure}
+\end{figure} 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{app_micro2}
-    \caption{Visualizzazione dei container in esecuzione per l'applicazione rilasciata nel suo namespace specifico. \\Ogni microservizio ha un suo database indipendente.}
+    \caption{Visualizzazione dei container in esecuzione per l'applicazione rilasciata nel suo namespace specifico. Ogni microservizio ha un suo database indipendente collegato tramite puntamento al relativo oggetto di tipo service che espone il container.}
     \label{fig:app_micro2}
-\end{figure}
+\end{figure}   \leavevmode \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{app_micro3}
-    \caption{Visualizzazione di tutti i servizi attivi per l'applicazione rilasciata.\\Come spiegato in precedenza, abbiamo solo due servizi esposti su internet, mentre gli altri 4 comunicano internamente al cluster e sono raggiungibili attraverso il gateway.}
+    \caption{Visualizzazione di tutti gli oggetti di tipo service attivi per l'applicazione di test rilasciata.\\Come spiegato in precedenza, abbiamo solo due servizi esposti su internet con ip pubblico, mentre gli altri 4 comunicano internamente al cluster e sono raggiungibili attraverso il gateway.}
     \label{fig:app_micro3}
-\end{figure} \leavevmode \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ 
+\end{figure} \leavevmode \\ \\ \\ \\ \\ 
 \section{Problemi incontrati lungo il progetto e approcci utilizzati}
 Durante lo sviluppo del progetto sono stati incontrati diversi problemi, i quali sono stati affrontati con determinati approcci per risolverli e/o deviarli.\\ \\
 \begin{itemize}
@@ -531,7 +538,7 @@ Certimetergroup, chi siamo. \url{https://www.certimetergroup.com/chi-siamo}
 Wikipedia, DevOps. \url{https://it.wikipedia.org/wiki/DevOps}
 
 \bibitem{cloud}
-Ionos.it, I vantaggi del cloud computing. 2023 \url{https://www.ionos.it/digitalguide/server/know-how/i-vantaggi-del-cloud-computing/}
+Ionos, I vantaggi del cloud computing. 2023 \url{https://www.ionos.it/digitalguide/server/know-how/i-vantaggi-del-cloud-computing/}
 
 
 \bibitem{iacdef}
@@ -567,6 +574,9 @@ Wikipedia, Jenkins. \url{https://it.wikipedia.org/wiki/Jenkins_(software)}
 
 \bibitem{jenkinsimg}
 Slideshare, Jenkins Pipeline, 2019. \url{https://www.slideshare.net/pavan5780/jenkins-pipeline-164020728}
+
+\bibitem{iac_img_workflow}
+Digitalocean, Infrastructure as Code Explained, 2020. \url{https://www.digitalocean.com/community/conceptual-articles/infrastructure-as-code-explained}
 
 \bibitem{youtubek8s}
 TechWorld with Nana, Kubernetes for Beginners, 2020. \url{https://www.youtube.com/watch?v=X48VuDVv0do}
