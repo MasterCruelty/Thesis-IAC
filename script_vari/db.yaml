@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-user
+  namespace: interview-tool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-user
+  template:
+    metadata:
+      labels:
+        app: db-user
+    spec:
+      containers:
+      - name: db-user
+        image: mysql
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        - name: MYSQL_DATABASE
+          value: user_db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-user-service
+  namespace: interview-tool
+spec:
+  selector:
+    app: db-user
+  ports:
+  - name: db-user-service
+    port: 3306
+    targetPort: 3306
