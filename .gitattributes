@@ -1,2 +1,3 @@
 *.yaml linguist-detectable=true
 *.sty linguist-detectable=false
+*.sql linguist-detectable=true
