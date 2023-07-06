@@ -292,7 +292,20 @@ La fase di implementazione, sulla base del sistema progettato descritto nel capi
 In primo luogo è stata creata una singola macchina virtuale tramite Azure, scegliendo le specifiche adatte a sostenere i requisiti di sistema richiesti dalle tecnologie di sviluppo già citate. Dunque successivamente vi sono stati installati i seguenti strumenti:
 \begin{itemize}
 \item \textit{Azure CLI} \\
-La command-line di Azure è stata utile a livello di supporto. \\ Nel momento in cui si renceva necessario effettuare delle modifiche minori alla macchina, scrivere comandi direttamente da shell risultava molto più comodo ed efficiente rispetto a fare la stessa modifica attraverso il portale web.
+La command-line di Azure è stata utile a livello di supporto. \\ Nel momento in cui si renceva necessario effettuare delle modifiche minori alla macchina, scrivere comandi direttamente da shell risultava molto più comodo ed efficiente rispetto a fare la stessa modifica attraverso il portale web.\\
+Inoltre è stata funzionale per i comandi di autenticazione e collegamento al cluster AKS(Azure Kubernetes Service) di riferimento.\\ \\ 
+\begin{lstlisting}[caption={\\\textit{Esempio di login e collegamento al cluster via script in Bash(ipotizzando che le variabili di login contengano nome utente e password di autenticazione su Azure). Il nome del gruppo risorse e del cluster vengono esportati tramite comando Terraform(che come già detto, tiene in memoria lo stato di configurazione delle risorse create)}}]
+
+az login -u $azure_user -p $azure_psw
+
+rs_group=$(terraform output resource_group_name | cut -d '"' -f 2)
+
+cluster_name=$(terraform output kubernetes_cluster_name | cut -d '"' -f 2)
+
+az aks get-credentials --resource-group $rs_group --name $cluster_name
+\end{lstlisting}
+\item \textit{Kubernetes CLI} \\
+La command-line di Kubernetes è stata ovviamente fondamentale per gestire le risorse del cluster AKS(Azure Kubernetes Service). 
 \end{itemize}
 
 Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.
