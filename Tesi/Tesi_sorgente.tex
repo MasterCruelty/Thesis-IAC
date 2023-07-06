@@ -307,7 +307,7 @@ az aks get-credentials --resource-group $rs_group --name $cluster_name
 \item \textit{Kubernetes CLI} \\
 La command-line di Kubernetes è stata ovviamente fondamentale per gestire le risorse del cluster AKS(Azure Kubernetes Service). 
 \end{itemize}
-
+Una volta che la macchina si è resa operativa e funzionale, è arrivato il momento di passare alla fase successiva nel costruire l'ambiente di sviluppo. \\
 Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.
 \subsection{Definizione via codice Terraform}
 All'interno dei sorgenti HCL sono state definite le specifiche che doveva avere il cluster Kubernetes di Azure. Nel dettaglio è stato deciso di quanti nodi si doveva comporre, la dimensione delle macchine e il numero massimo di pod che poteva sostenere ogni nodo. \\Inoltre è stata definita una risorsa locale di tipo stringa per generare un suffisso casuale in modo da evitare conflitti con eventuali risorse di nome identico già presenti sul cloud.\\
