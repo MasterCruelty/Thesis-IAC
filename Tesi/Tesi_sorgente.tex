@@ -141,6 +141,12 @@ Come da requisiti iniziali anche le successive modifiche all'applicazione poteva
     \caption{Rappresentazione grafica di come DevOps si ponga nell'intersezione tra sviluppo, garanzia di qualità e operazioni IT.) \cite{defdevops}}
     \label{fig:def_devops}
 \end{figure}
+\section{Introduzione ai capitoli centrali}
+Al netto di quanto descritto finora, nei prossimi capitoli andremo ad analizzare ognuna di queste 3 fasi. \\
+Nel\textbf{capitolo 2} verranno illustrate le tecnologie principali utilizzate e verranno analizzate le loro potenzialità in funzione di quanto visto e testato durante il lavoro svolto. \\
+Nel \textbf{capitolo 3} verrà illustrata la progettazione dell'infrastruttura. Verranno analizzate le componenti disegnate, motivando ogni scelta progettuale effettuata. \\
+Nel \textbf{capitolo 4} si andrà invece a presentare l'implementazione effettiva del sistema progettato. Saranno approfonditi tutti gli approcci utilizzati, evidenziato in modo chiaro i vantaggi e svantaggi di tutte le scelte prese. Inoltre verranno sottolineate anche le difficoltà incontrate e in che modo sono state affrontate. \\
+\textbf{Nell'ultimo capitolo} verranno infine evidenziati i risultati raggiunti al termine di tutto il progetto e considerati eventuali miglioramenti che potrebbero essere apportati al sistema per aumentarne efficacia e funzionalità.
 %-------------------------------------------------
 \chapter{Fase di studio e analisi dei requisiti}
 \section{Tecnologie utilizzate}
@@ -178,7 +184,7 @@ Un'ulteriore vantaggio legato a Kubernetes risiede nei suoi meccanismi di autosc
     \caption{Una rappresentazione grafica di un cluster Kubernetes. \cite{k8simg}}
     \label{fig:k8s}
 \end{figure}
-Ad esempio nella figura 3 si può notare che il cluster è configurato con quattro nodi, uno master e tre worker. All'interno del master vi sono tutte le componenti di sistema di Kubernetes, mentre sui nodi worker risiedono i microservizi deployati. Il contenuto dei manifesti YAML viene comunicato al nodo master che successivamente va a schedulare i container in modo appropriato sui vari nodi.
+Ad esempio nella figura 3 si può notare che il cluster è configurato con quattro nodi, uno master e tre worker. All'interno del master vi sono tutte le componenti di sistema di Kubernetes, mentre sui nodi worker risiedono i microservizi deployati. Il contenuto dei manifesti YAML viene comunicato al nodo master che successivamente va a schedulare i container in modo appropriato sui vari nodi.\\ \\ \\ \\ \\
 \subsection{Azure}
 Nel corso della fase di studio, tra le varie alternative possibili è stato scelto Azure come cloud provider su cui fare affidamento.\\
 I vantaggi di usare il cloud sono molteplici ma quello principale è il non bisogno di costruirsi un proprio datacenter privato acquistando hardware e gestendolo privatamente, ma noleggiandolo da società terze sfruttando la rete.\cite{cloud}\\
@@ -204,7 +210,7 @@ Questo è stato uno strumento fondamentale ai fini del progetto, nonché ponte d
 È un software open source di supporto allo sviluppo che permette facilmente l'integrazione continua e automatica nei rilasci del software.\cite{jenkins}\\
 Jenkins è stato utilizzato in questo progetto per costruire delle cosiddette pipeline, ovvero delle collezioni di eventi che succedono uno dopo l'altro. 
 In ogni pipeline prodotta vi sono quindi diversi blocchi di azioni che vengono eseguite tramite appositi script scritti in Bash. \\
-Ogni qualvolta viene fatta una modifica, un trigger viene attiva e una pipeline specifica viene eseguita in autonomia e senza bisogno di passi manuali. \\ \\ \\ \\ \\ \\ \\
+Ogni qualvolta viene fatta una modifica, un trigger viene attiva e una pipeline specifica viene eseguita in autonomia e senza bisogno di passi manuali. \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{jenkins}
     \caption{Rappresentazione grafica di una pipeline eseguita da Jenkins. \cite{jenkinsimg}}
@@ -250,7 +256,7 @@ Se adesso consideriamo invece l'utilizzo di Terraform ma senza l'ausilio di una 
     \caption{Un esempio di ciclo di sviluppo per un'infrastruttura IAC.\cite{iac_img_workflow}}
     \label{fig:push_modifica}
 \end{figure}
-\newline In figura 8 viene esplicitato il processo di sviluppo \textbf{IAC} nel suo ciclo continuo. Esattamente come in questa fase si è partiti dal definire le componenti che avrebbero composto l'infrastruttura, successivamente viene scritto il codice e eseguito il deploy dopo averlo fatto eseguire. Nel caso in cui il sistema rispetta i requisiti ed è quindi compatibile con il progetto in corso di sviluppo, possiamo utilizzare il sistema costruito. In caso contrario, possiamo fare un passo indietro tornando a ridiscutere i requisiti eseguendo le modifiche necessarie e ripetendo i passi appena descritti.\\
+\newline In figura 8 viene esplicitato il processo di sviluppo \textbf{IAC} nel suo ciclo continuo. Esattamente come in questa fase si è partiti dal definire le componenti che avrebbero composto l'infrastruttura, successivamente viene scritto il codice e eseguito il deploy dopo averlo fatto eseguire. Nel caso in cui il sistema rispetta i requisiti ed è quindi compatibile con il progetto in corso di sviluppo, possiamo utilizzare il sistema costruito. In caso contrario, possiamo fare un passo indietro tornando a ridiscutere i requisiti eseguendo le modifiche necessarie e ripetendo i passi appena descritti.\\ \\ \\ \\ \\ \\ \\
 \section{Definizione dell'infrastruttura}
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{disegno_struttura_infra}
@@ -406,7 +412,7 @@ Per come era strutturata l'applicazione architetturalmente, solo il frontend e l
 Qui di seguito è posizionato uno dei manifesti in formato YAML definito per uno dei quattro microservizi chiamato user.\\ 
 Nella prima parte è definito un oggetto di tipo deployment che presenta le specifiche del container, a partire dal nome, namespace fino all'immagine che dovrà esserci montata sopra.\\ 
 Sempre sul deployment sono stati definiti anche dei volumi per montare delle chiavi necessarie per il microservizio, oltre a delle variabili d'ambiente per richiamare il database.\\ 
-Nella seconda parte del manifesto è definito un oggetto di tipo service per esporre sulla porta 8080. \\ \\ \\ \\ \\ \\
+Nella seconda parte del manifesto è definito un oggetto di tipo service per esporre sulla porta 8080. \\ \\ \\ 
 \begin{lstlisting}[caption={\\\textit{Il manifesto YAML appena citato e descritto.}}]
 apiVersion: apps/v1
 kind: Deployment
@@ -469,19 +475,19 @@ spec:
     targetPort: 8080
 \end{lstlisting}
 Un'ulteriore modifica è stata effettuata ai file di proprietà di ogni microservizio per regolare le rotte interne al cluster, sempre utilizzando il nome dominio FQDN dei servizi come fatto nel gateway. Sempre negli stessi file è stata modificata la rotta per il collegamento al database in modo da far collegare il microservizio al container del database definito tramite Kubernetes.\\
-In questo modo, l'applicazione che prima era stata definita per essere eseguita e testata in un ambiente locale, ora ha le caratteristiche necessarie per essere eseguita sul cloud all'interno del cluster Kubernetes definito. \\ \\ 
+In questo modo, l'applicazione che prima era stata definita per essere eseguita e testata in un ambiente locale, ora ha le caratteristiche necessarie per essere eseguita sul cloud all'interno del cluster Kubernetes definito. \\ \\ \\ \\ \\ \\ \\ \\ \\
 Giunti a questo punto, il sistema risulta completo, dunque se lo sviluppatore di questa applicazione dovesse apportare delle modifiche a uno qualunque dei microservizi che la compongono, verrebbero deployate in tempo reale nell'arco di 15 minuti totalmente in automatico seguendo le procedure descritte nei precedenti paragrafi. \\
 L'unico aspetto manuale che è doveroso considerare rientrerebbe nel caso in cui si volesse fare rollback a una versione precedente. In tal caso sarebbe necessario eseguire un comando dalla CLI di Kubernetes specificando la versione dell'immagine di cui eseguire il pull, creando così il nuovo container e eliminando quello basato sull'immagine contenente eventuali problemi. \\ \\ \\ 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{app_micro}
     \caption{Schermata principale dell'applicazione una volta deployata con successo sull'infrastruttura sviluppata.}
     \label{fig:app_micro}
-\end{figure} 
+\end{figure} \leavevmode \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{app_micro2}
     \caption{Visualizzazione dei container in esecuzione per l'applicazione rilasciata nel suo namespace specifico. Ogni microservizio ha un suo database indipendente collegato tramite puntamento al relativo oggetto di tipo service che espone il container.}
     \label{fig:app_micro2}
-\end{figure}   \leavevmode \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
+\end{figure}   \leavevmode \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ 
 \begin{figure}[h]
 	\includegraphics[width=1.0\textwidth]{app_micro3}
     \caption{Visualizzazione di tutti gli oggetti di tipo service attivi per l'applicazione di test rilasciata.\\Come spiegato in precedenza, abbiamo solo due servizi esposti su internet con ip pubblico, mentre gli altri 4 comunicano internamente al cluster e sono raggiungibili attraverso il gateway.}
