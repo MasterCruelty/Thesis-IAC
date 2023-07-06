@@ -287,10 +287,16 @@ I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica 
 \end{figure}
 \newline In Figura 11 vi è un disegno progettuale che invece tratta il rilascio automatico delle modifiche dei microservizi deployati sull'infrastruttura. Il processo che va ad eseguire le azioni necessarie per fare ciò è analogo a quanto descritto nel paragrafo 3.2 per la figura 8. Essenzialmente il disegno è molto simile, è stata ignorata tutta la parte IAC e tenuto conto solo delle pipeline di rilascio in ambito DevOps.\\
 \chapter{Implementazione dell'infrastruttura}
-\section{Codice Terraform e pipeline dedicata}
-La fase di implementazione, sulla base del sistema progettato descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo. \\
+\section{Costruzione dell'ambiente di sviluppo}
+La fase di implementazione, sulla base del sistema progettato descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo.\\
+In primo luogo è stata creata una singola macchina virtuale tramite Azure, scegliendo le specifiche adatte a sostenere i requisiti di sistema richiesti dalle tecnologie di sviluppo già citate. Dunque successivamente vi sono stati installati i seguenti strumenti:
+\begin{itemize}
+\item \textit{Azure CLI} \\
+La command-line di Azure è stata utile a livello di supporto. \\ Nel momento in cui si renceva necessario effettuare delle modifiche minori alla macchina, scrivere comandi direttamente da shell risultava molto più comodo ed efficiente rispetto a fare la stessa modifica attraverso il portale web.
+\end{itemize}
+
 Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.
-\subsection{Definizione via codice}
+\subsection{Definizione via codice Terraform}
 All'interno dei sorgenti HCL sono state definite le specifiche che doveva avere il cluster Kubernetes di Azure. Nel dettaglio è stato deciso di quanti nodi si doveva comporre, la dimensione delle macchine e il numero massimo di pod che poteva sostenere ogni nodo. \\Inoltre è stata definita una risorsa locale di tipo stringa per generare un suffisso casuale in modo da evitare conflitti con eventuali risorse di nome identico già presenti sul cloud.\\
 È stato impostato l'autoscale sui nodi con un minimo di tre fino a un massimo di sei. Il numero massimo di pod è stato impostato a 30.\\
 Il numero di nodi e di pods è stato scelto in funzione dell'eventuale carico a cui poteva essere sottoposto il sistema. In questo contesto l'applicazione finale che doveva essere rilasciata aveva solamente 4 microservizi e il suo scopo era di elaborare e gestire dei quiz da colloquio tecnico aziendale. Ipotizzando un utilizzo non intensivo è stato ragionevole scegliere un basso numero di nodi a garantire che l'applicazione fosse online anche nel caso in cui uno di essi fosse andato offline, mentre il numero di pods era più che sufficiente a gestire il numero di eventuali repliche da distribuire sui tre nodi.\\
