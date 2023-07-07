@@ -306,7 +306,7 @@ az aks get-credentials --resource-group $rs_group --name $cluster_name
 \end{lstlisting}
 \item \textit{Kubernetes CLI} \\
 La command-line di Kubernetes è stata ovviamente fondamentale per gestire le risorse del cluster AKS(\textbf{Azure Kubernetes Service}). Dopo essersi autenticati e collegati al cluster che ci interessa, è possibile utilizzare tutti i comandi con prefisso kubectl. In questo modo si possono eseguire tutte le operazioni che si desiderano direttamente da shell in comodità senza strumenti ausiliari. \\
-\begin{lstlisting}[caption={\\\textit{Nelle seguenti righe vi è un esempio di comandi lanciabili tramite la command-line di Kubernetes. )}}]
+\begin{lstlisting}[caption={\\\textit{Nelle seguenti righe vi è un esempio di comandi lanciabili tramite la command-line di Kubernetes.}}]
 #visualizza i nodi connessi al cluster
 kubectl get nodes
 #visualizza le risorse di tipo deployment sul cluster
@@ -318,8 +318,23 @@ kubectl describe pod esempio-pod -n namespace-esempio | more
 \end{lstlisting}
 
 \item \textit{Terraform CLI} \\
+La command-line di Terraform è stata essenziale sia per eseguire test sulla creazione di risorse, sia per creare effettivamente le risorse necessarie(l'AKS in questo contesto del progetto). Sono presenti svariati comandi tra cui validazione sulla sintassi del codice scritto, pianificazione delle azioni che verrebbero svolte dato un codice sorgente e l'attuazione effettiva di tali azioni.
+\begin{lstlisting}[language=bash][caption={\\\textit{Esempio di utilizzo della command-line di Terraform per creare in modo rapido e sicuro un qualsiasi tipo di risorsa.}}]
+#inizializzazione dell'ambiente(Terraform si procura le componenti necessarie per poter compilare il codice nei sorgenti della directory corrente)
+terraform init
+#Controllo su eventuali errori di sintassi nel codice
+terraform validate
+#Esegue una pianificazione delle azioni che verrebbero svolte se il codice andasse in esecuzione. Ioltre questo piano viene esportato in un file dedicato.
+terraform plan -out tfplan
+#Una volta che il piano di esecuzione risulta pronto, andiamo a revisionarlo. Ad esempio possiamo convertire il piano di esecuzione facilmente in formato json.
+terraform show -json tf.plan | jq > tfplan.json
+jq 'campo-da-esaminare' tfplan.json
+#Infine andiamo ad applicare le azioni contenute nel piano di esecuzione, se corretto.
+terraform apply tfplan
+\end{lstlisting}
 
-\item \textit{Jenkins}
+\item \textit{Jenkins} \\
+
 \end{itemize}
 Una volta che la macchina si è resa operativa e funzionale, è arrivato il momento di passare alla fase successiva nel costruire l'ambiente di sviluppo. \\
 Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.
