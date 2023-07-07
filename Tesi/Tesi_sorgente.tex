@@ -292,7 +292,7 @@ La fase di implementazione, sulla base del sistema progettato descritto nel capi
 In primo luogo è stata creata una singola macchina virtuale tramite Azure, scegliendo le specifiche adatte a sostenere i requisiti di sistema richiesti dalle tecnologie di sviluppo già citate. Dunque successivamente vi sono stati installati i seguenti strumenti:
 \begin{itemize}
 \item \textit{Azure CLI} \\
-La command-line di Azure è stata utile a livello di supporto. \\ Nel momento in cui si renceva necessario effettuare delle modifiche minori alla macchina, scrivere comandi direttamente da shell risultava molto più comodo ed efficiente rispetto a fare la stessa modifica attraverso il portale web.\\
+La command-line di Azure è stata utile a livello di supporto. \\ Nel momento in cui si rendeva necessario effettuare delle modifiche minori alla macchina(come ad esempio regole di sicurezza sull'esposizione di alcune porte), scrivere comandi direttamente da shell risultava molto più comodo ed efficiente rispetto a fare la stessa modifica attraverso il portale web.\\
 Inoltre è stata funzionale per i comandi di autenticazione e collegamento al cluster AKS(Azure Kubernetes Service) di riferimento.\\ \\ 
 \begin{lstlisting}[caption={\\\textit{Esempio di login e collegamento al cluster via script in Bash(ipotizzando che le variabili di login contengano nome utente e password di autenticazione su Azure). Il nome del gruppo risorse e del cluster vengono esportati tramite comando Terraform(che come già detto, tiene in memoria lo stato di configurazione delle risorse create)}}]
 
@@ -305,7 +305,21 @@ cluster_name=$(terraform output kubernetes_cluster_name | cut -d '"' -f 2)
 az aks get-credentials --resource-group $rs_group --name $cluster_name
 \end{lstlisting}
 \item \textit{Kubernetes CLI} \\
-La command-line di Kubernetes è stata ovviamente fondamentale per gestire le risorse del cluster AKS(Azure Kubernetes Service). 
+La command-line di Kubernetes è stata ovviamente fondamentale per gestire le risorse del cluster AKS(\textbf{Azure Kubernetes Service}). Dopo essersi autenticati e collegati al cluster che ci interessa, è possibile utilizzare tutti i comandi con prefisso kubectl. In questo modo si possono eseguire tutte le operazioni che si desiderano direttamente da shell in comodità senza strumenti ausiliari. \\
+\begin{lstlisting}[caption={\\\textit{Nelle seguenti righe vi è un esempio di comandi lanciabili tramite la command-line di Kubernetes. )}}]
+#visualizza i nodi connessi al cluster
+kubectl get nodes
+#visualizza le risorse di tipo deployment sul cluster
+kubectl get deployments
+#visualizza le istanze di pod create sul cluster
+kubectl get pods
+#fornisci informazioni relative a un pod specifico che si trova in un namespace specifico, aggiungendo in pipe un comando more per poter scorrere con calma la pagina risultante.
+kubectl describe pod esempio-pod -n namespace-esempio | more
+\end{lstlisting}
+
+\item \textit{Terraform CLI} \\
+
+\item \textit{Jenkins}
 \end{itemize}
 Una volta che la macchina si è resa operativa e funzionale, è arrivato il momento di passare alla fase successiva nel costruire l'ambiente di sviluppo. \\
 Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.
