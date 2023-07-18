@@ -289,7 +289,9 @@ I vantaggi di avere una pipeline dedicata solo per la costruzione o la modifica 
 \chapter{Implementazione dell'infrastruttura}
 \section{Costruzione dell'ambiente di sviluppo}
 La fase di implementazione, sulla base del sistema progettato descritto nel capitolo precedente, è iniziata costruendo prima l'ambiente operativo di sviluppo.\\
-In primo luogo è stata creata una singola macchina virtuale tramite Azure, scegliendo le specifiche adatte a sostenere i requisiti di sistema richiesti dalle tecnologie di sviluppo già citate. Dunque successivamente vi sono stati installati i seguenti strumenti:
+In primo luogo è stata creata una singola macchina virtuale tramite Azure, scegliendo le specifiche adatte a sostenere i requisiti di sistema richiesti dalle tecnologie di sviluppo già citate. Così è stato possibile minimizzare i costi al consumo e allo stesso tempo avere la potenza sufficiente. \\
+Come immagine di partenza per il sistema operativo è stata scelta una \textit{CentOS} nella sua versione minimale priva di interfaccia grafica. Ogni operazione su questa macchina è stata eseguita da remoto attraverso sessioni di collegamento utilizzando il protocollo SSH. \\
+A bordo di questa macchina sono stati installati i seguenti strumenti:
 \begin{itemize}
 \item \textit{Azure CLI} \\
 La command-line di Azure è stata utile a livello di supporto. \\ Nel momento in cui si rendeva necessario effettuare delle modifiche minori alla macchina(come ad esempio regole di sicurezza sull'esposizione di alcune porte), scrivere comandi direttamente da shell risultava molto più comodo ed efficiente rispetto a fare la stessa modifica attraverso il portale web.\\
@@ -318,7 +320,7 @@ kubectl describe pod esempio-pod -n namespace-esempio | more
 \end{lstlisting}
 
 \item \textit{Terraform CLI} \\
-La command-line di Terraform è stata essenziale sia per eseguire test sulla creazione di risorse, sia per creare effettivamente le risorse necessarie(l'AKS in questo contesto del progetto). Sono presenti svariati comandi tra cui validazione sulla sintassi del codice scritto, pianificazione delle azioni che verrebbero svolte dato un codice sorgente e l'attuazione effettiva di tali azioni.
+La command-line di Terraform è stata essenziale sia per eseguire test sulla creazione di risorse, sia per creare effettivamente le risorse necessarie(l'AKS in questo contesto del progetto). Sono presenti svariati comandi tra cui validazione sulla sintassi del codice scritto, pianificazione delle azioni che verrebbero svolte dato un codice sorgente e l'attuazione effettiva di tali azioni.\\ \\ \\
 \begin{lstlisting}[language=bash][caption={\\\textit{Esempio di utilizzo della command-line di Terraform per creare in modo rapido e sicuro un qualsiasi tipo di risorsa.}}]
 #inizializzazione dell'ambiente(Terraform si procura le componenti necessarie per poter compilare il codice nei sorgenti della directory corrente)
 terraform init
@@ -334,7 +336,8 @@ terraform apply tfplan
 \end{lstlisting}
 
 \item \textit{Jenkins} \\
-
+L'installazione di Jenkins e la sua successiva resa operativa è stata la più laboriosa. Inizialmente nell'installazione avvenuta in automatico, vengono aggiunti di default tutta una serie di plugin cosiddetti "consigliati". È anche possibile ignorare questo aspetto e eventualmente installare solo quelli che si desiderano.\\
+Fatto ciò, all'interno dell'interfaccia web si è reso necessario aggiungere e configurare opportunamente tutte le credenziali utili che sarebbero poi state richiamate tramite variabile negli script in Bash all'interno delle pipeline. Oltre a ciò è stato aggiunto l'utente jenkins al gruppo sudo tramite la modifica del file dedicato \textit{sudoers}, così da permettere agli script automatici(opportunamente sviluppati) di eseguire eventuali comandi che richiedono privilegi di amministrazione.
 \end{itemize}
 Una volta che la macchina si è resa operativa e funzionale, è arrivato il momento di passare alla fase successiva nel costruire l'ambiente di sviluppo. \\
 Per fare ciò è stato prima prodotto il codice Terraform e successivamente sviluppata la pipeline dedicata al rilascio delle modifiche di tale codice.
@@ -398,7 +401,7 @@ Anche questa è stata una scelta presa durante lo sviluppo, poiché se questa ap
 Come già detto se il job relativo alla build del codice non viene concluso correttamente senza errori, la pipeline si ferma senza far cominciare quest'ultimo.\\
 Questo accade per ogni concatenazione, avendo impostato tramite un apposito flag che i trigger di post-compilazione si attivano solo se la compilazione del processo attualmente in esecuzione è stabile.\\ \\ \\ \\ \\ \\
 \end{enumerate}
-Le credenziali di accesso sono gestite tramite un sistema interno di \textbf{Jenkins} dove è possibile definirle comodamente per poi utilizzarle come variabili negli script \textbf{Bash}.\\
+Le credenziali di accesso, come citato nel paragrafo 4.1, sono gestite tramite un sistema interno di \textbf{Jenkins} dove è possibile definirle comodamente per poi utilizzarle come variabili negli script \textbf{Bash}.\\
 Inoltre, per tenere traccia delle risorse attualmente attive, \textbf{Terraform} crea durante la prima esecuzione del codice un file di configurazione dello stato corrente, il quale viene aggiornato di volta in volta. In questo modo se si esegue due volte lo stesso codice, non viene creata due volte la risorsa.
 \begin{lstlisting}[caption={\\\textit{Frammento di codice relativo alla compilazione del codice Terraform.\\ Nelle ultime righe viene effettuato un collegamento con il cluster appena creato e lanciato un comando per visualizzare i nodi in modo da accertarsi che sia operativo.}}]
 az login -u $azure_user -p $azure_psw
