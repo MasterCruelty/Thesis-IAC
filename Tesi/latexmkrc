@@ -1,0 +1,2 @@
+{'TZ'}='Europe/Rome';
+ = 'xelatex -output-driver=xdvipdfmx -z 0 %O %S';
